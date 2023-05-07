@@ -72,8 +72,6 @@ ZSH_THEME="amuse-remote"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(git zsh-autosuggestions zsh-syntax-highlighting docker)
 
-export TM_LOCAL_DEV_PATH="${HOME}/data/projects/stena/tm-local-dev/"
-
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
