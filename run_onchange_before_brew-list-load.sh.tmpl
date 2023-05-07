@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# .brew-list hash: {{ include ".brew-list" | sha256sum }}
+brew install $(cat ~/.brew-list)
