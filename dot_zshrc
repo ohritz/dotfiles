@@ -105,8 +105,9 @@ export DEFAULT_USER="sohan"
 
 ensure_ssh
 
-export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 export GPG_TTY=$(tty)
 
@@ -126,7 +127,6 @@ export WSL_DISTRO_NAME="Ubuntu-20.04"
 
 source "${HOME}/.global-env"
 source "${HOME}/.conf-env"
-
 source "${HOME}/.tm-aws"
 source "$TM_LOCAL_DEV_PATH/aliases"
 FPATH="$TM_LOCAL_DEV_PATH/completions:$FPATH"
