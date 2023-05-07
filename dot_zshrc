@@ -72,6 +72,9 @@ ZSH_THEME="amuse-remote"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(git zsh-autosuggestions zsh-syntax-highlighting docker)
 
+export TM_LOCAL_DEV_PATH=/home/sohan/dev/stena/tm-local-dev
+
+
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
@@ -122,6 +125,7 @@ export WSL_DISTRO_NAME="Ubuntu-20.04"
 
 
 source "${HOME}/.global-env"
+source "${HOME}/.conf-env"
 
 source "${HOME}/.tm-aws"
 source "$TM_LOCAL_DEV_PATH/aliases"
