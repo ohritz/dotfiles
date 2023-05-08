@@ -72,8 +72,11 @@ ZSH_THEME="amuse-remote"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(git zsh-autosuggestions zsh-syntax-highlighting docker)
 
-export TM_LOCAL_DEV_PATH=/home/sohan/dev/stena/tm-local-dev
-
+source "${HOME}/.global-env"
+source "${HOME}/.conf-env"
+source "${HOME}/.tm-aws"
+source "$TM_LOCAL_DEV_PATH/aliases"
+FPATH="$TM_LOCAL_DEV_PATH/completions:$FPATH"
 
 source $ZSH/oh-my-zsh.sh
 
@@ -137,12 +140,6 @@ set_buildtools_nemo
 repo_version=$(if command -v lsb_release &> /dev/null; then lsb_release -r -s; else grep -oP '(?<=^VERSION_ID=).+' /etc/os-release | tr -d '"'; fi)
 export WSL_DISTRO_NAME="Ubuntu-${repo_version}"
 
-
-source "${HOME}/.global-env"
-source "${HOME}/.conf-env"
-source "${HOME}/.tm-aws"
-source "$TM_LOCAL_DEV_PATH/aliases"
-FPATH="$TM_LOCAL_DEV_PATH/completions:$FPATH"
 autoload -Uz compinit && compinit
 
 [[ /usr/local/bin/kubectl ]] && source <(kubectl completion zsh)
