@@ -1,0 +1,13 @@
+#!/bin/bash
+
+get-key() {
+    local key="{{ (index (lastpassRaw "github-gpg-key") 0).note }}"
+    echo "${key}"
+}
+
+add-key() {
+    get-key | gpg --import
+}
+
+add-key
+
