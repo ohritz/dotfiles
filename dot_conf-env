@@ -1,1 +1,3 @@
 export EDITOR="code --wait"
+export STENA_PROJECTS_ROOT="${HOME}/data/projects/stena"
+export TM_LOCAL_DEV_PATH="${STENA_PROJECTS_ROOT}/tm-local-dev/"
