@@ -7,11 +7,11 @@ Color_End='\033[0m'
 source "${TM_LOCAL_DEV_PATH}/common.sh"
 
 set_buildtools_ca () {
-    export BUILD_TOOLS_PATH=/home/sohan/dev/stena/freight-build-tools
+    export BUILD_TOOLS_PATH="${STENA_PROJECTS_ROOT}/freight-build-tools"
     PATH="$PATH:$BUILD_TOOLS_PATH"
 }
 set_buildtools_nemo () {
-    export BUILD_TOOLS_PATH=/home/sohan/dev/stena/tm-build-tools
+    export BUILD_TOOLS_PATH="${STENA_PROJECTS_ROOT}/tm-build-tools"
     PATH="$PATH:$BUILD_TOOLS_PATH"
 }
 
