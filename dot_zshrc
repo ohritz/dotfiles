@@ -122,7 +122,8 @@ export GPG_AGENT_INFO=${HOME}/.gnupg/S.gpg-agent:0:1
 # set_buildtools_ca | set_buildtools_nemo in .oh-my-zsh/custom/
 set_buildtools_nemo
 
-export WSL_DISTRO_NAME="Ubuntu-20.04"
+repo_version=$(if command -v lsb_release &> /dev/null; then lsb_release -r -s; else grep -oP '(?<=^VERSION_ID=).+' /etc/os-release | tr -d '"'; fi)
+export WSL_DISTRO_NAME="Ubuntu-${repo_version}"
 
 
 source "${HOME}/.global-env"
@@ -134,16 +135,7 @@ autoload -Uz compinit && compinit
 
 [[ /usr/local/bin/kubectl ]] && source <(kubectl completion zsh)
 
-export BUN_INSTALL="/home/sohan/.bun"
 export DOTNET_ROOT=$HOME/.dotnet
 export PATH="$PATH:$DOTNET_ROOT:$DOTNET_ROOT/tools:$HOME/go/bin:/usr/local/go/bin:$HOME/bin:$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$BUN_INSTALL/bin"
 
 # greeting
-
-
-# bun completions
-[ -s "/home/sohan/.oh-my-zsh/completions/_bun" ] && source "/home/sohan/.oh-my-zsh/completions/_bun"
-
-# bun
-
-[ -f "/home/sohan/.ghcup/env" ] && source "/home/sohan/.ghcup/env" # ghcup-env
