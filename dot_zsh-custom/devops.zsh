@@ -18,3 +18,10 @@ get_board_item_title() {
     local title=$(az boards work-item show --id ${taskId} | jq -r '.fields ."System.Title"')
     echo $title
 }
+
+
+ready-to-pull() {
+    local taskId="${1:?Must supply a PBI Id}"
+    local state=$(az boards work-item update --id ${taskId} --state 'Ready to pull' | jq -r '.fields ."System.State"')
+    echo $state
+}

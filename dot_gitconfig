@@ -20,6 +20,7 @@
 	c = commit
 	st = status -sb
 	b = branch
+	riom = rebase -i origin/master
 	nottracked = ls-files --others
 	unstage = reset HEAD --
 	dc = diff --cached
