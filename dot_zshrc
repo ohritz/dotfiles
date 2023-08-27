@@ -1,5 +1,5 @@
-# If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
+# uncomment this and zprof at the end of the file to enable profiler
+# zmodload zsh/zprof
 
 # Path to your oh-my-zsh installation.
 export ZSH="/home/sohan/.oh-my-zsh"
@@ -8,7 +8,7 @@ export ZSH="/home/sohan/.oh-my-zsh"
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="amuse-remote"
+ZSH_THEME="skipper"
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -63,22 +63,25 @@ ZSH_THEME="amuse-remote"
 # HIST_STAMPS="mm/dd/yyyy"
 
 # Would you like to use another custom folder than $ZSH/custom?
-# ZSH_CUSTOM=/path/to/new-custom-folder
+ZSH_CUSTOM="${HOME}/.zsh-custom"
+
+zstyle ':omz:plugins:nvm' autoload yes
 
 # Which plugins would you like to load?
 # Standard plugins can be found in $ZSH/plugins/
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git zsh-autosuggestions zsh-syntax-highlighting docker)
+plugins=(zsh-compinit-load emoji emoji-clock colorize zsh-autosuggestions zsh-syntax-highlighting docker docker-compose azure dotnet pj git gitfast kubectx gh gpg-agent nvm oc sudo zsh-interactive-cd magic-enter history-substring-search)
 
-source "${HOME}/.global-env"
 source "${HOME}/.conf-env"
 source "${HOME}/.tm-aws"
 source "$TM_LOCAL_DEV_PATH/aliases"
 FPATH="$TM_LOCAL_DEV_PATH/completions:$FPATH"
-
+PROJECT_PATHS=(~/data/projects/stena ~/data/projects ~/data/projects/lab)
 source $ZSH/oh-my-zsh.sh
+
+source "${HOME}/.global-env"
 
 # User configuration
 
@@ -86,13 +89,6 @@ source $ZSH/oh-my-zsh.sh
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
-
-# Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
@@ -105,12 +101,12 @@ source $ZSH/oh-my-zsh.sh
 
 # set PATH so it includes user's private bin if it exists
 if [ -d "$HOME/bin" ] ; then
-    PATH="$HOME/bin:$PATH"
+  PATH="$HOME/bin:$PATH"
 fi
 
 # set PATH so it includes user's private bin if it exists
 if [ -d "$HOME/.local/bin" ] ; then
-    PATH="$HOME/.local/bin:$PATH"
+  PATH="$HOME/.local/bin:$PATH"
 fi
 
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
@@ -120,16 +116,17 @@ export DEFAULT_USER="sohan"
 
 ensure_ssh
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+autoload -Uz compinit
+
+# export NVM_DIR="$HOME/.nvm"
+# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 export GPG_TTY=$(tty)
 
-if [ ! -f ~/.gnupg/S.gpg-agent ]; then
-    eval $( gpg-agent --daemon --options ~/.gnupg/gpg-agent.conf )
-fi
-
+# if [ ! -f ~/.gnupg/S.gpg-agent ]; then
+#   eval $( gpg-agent --daemon --options ~/.gnupg/gpg-agent.conf )
+# fi
 export GPG_AGENT_INFO=${HOME}/.gnupg/S.gpg-agent:0:1
 
 # eval ``keychain --eval --agents ssh id_rsa
@@ -140,11 +137,13 @@ set_buildtools_nemo
 repo_version=$(if command -v lsb_release &> /dev/null; then lsb_release -r -s; else grep -oP '(?<=^VERSION_ID=).+' /etc/os-release | tr -d '"'; fi)
 export WSL_DISTRO_NAME="Ubuntu-${repo_version}"
 
-autoload -Uz compinit && compinit
 
 [[ /usr/local/bin/kubectl ]] && source <(kubectl completion zsh)
 
-export DOTNET_ROOT=$HOME/.dotnet
+export DOTNET_ROOT=/usr/share/dotnet
+# export DOTNET_ROOT=$HOME/.dotnet
 export PATH="$PATH:$DOTNET_ROOT:$DOTNET_ROOT/tools:$HOME/go/bin:/usr/local/go/bin:$HOME/bin:$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$BUN_INSTALL/bin"
 
 # greeting
+
+# zprof
