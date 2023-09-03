@@ -6,13 +6,14 @@ export Color_End="$reset_color"
 
 alias zshconfig="code ~/.zshrc"
 alias ohmyzsh="code ~/.oh-my-zsh"
-
+alias ohmycustom="code $ZSH_CUSTOM"
+alias chezmoi-edit="code $HOME/.local/share/chezmoi"
 greeting() {
   if [[ is_interactive ]]; then
     local myname=$(whoami)
     local f_msg=$(fortune -as)
     local msg="Hello ${myname}! \n\n ${f_msg}"
-    
+
     printf ${Green}
     echo "${msg}" | cowsay -f tux -pn
     printf ${Color_End}
