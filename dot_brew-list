@@ -93,6 +93,7 @@ openldap
 openshift-cli
 openssl@1.1
 openssl@3
+openshift-cli
 p11-kit
 pcre2
 pinentry
