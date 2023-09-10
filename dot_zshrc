@@ -79,8 +79,13 @@ plugins=(zsh-compinit-load emoji emoji-clock colorize zsh-autosuggestions zsh-sy
 
 source "${HOME}/.conf-env"
 source "$TM_LOCAL_DEV_PATH/aliases"
-FPATH="$TM_LOCAL_DEV_PATH/completions:$FPATH"
+# FPATH="$TM_LOCAL_DEV_PATH/completions:$FPATH"
+# FPATH="$TM_LOCAL_DEV_PATH/completions:$FPATH"
 PROJECT_PATHS=(~/data/projects/stena ~/data/projects ~/data/projects/lab)
+
+fpath=("$TM_LOCAL_DEV_PATH"completions $fpath)
+fpath=("/home/linuxbrew/.linuxbrew/share/zsh/site-functions" $fpath)
+
 source $ZSH/oh-my-zsh.sh
 
 source "${HOME}/.global-env"
@@ -114,28 +119,17 @@ fi
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 export DEFAULT_USER="sohan"
-#prompt_context()
-
-autoload -Uz compinit
-
-# export NVM_DIR="$HOME/.nvm"
-# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 export GPG_TTY=$(tty)
 
-# if [ ! -f ~/.gnupg/S.gpg-agent ]; then
-#   eval $( gpg-agent --daemon --options ~/.gnupg/gpg-agent.conf )
-# fi
 export GPG_AGENT_INFO=${HOME}/.gnupg/S.gpg-agent:0:1
 
-# eval ``keychain --eval --agents ssh id_rsa
 
 # set_buildtools_ca | set_buildtools_nemo in .oh-my-zsh/custom/
 set_buildtools_nemo
 
-repo_version=$(if command -v lsb_release &> /dev/null; then lsb_release -r -s; else grep -oP '(?<=^VERSION_ID=).+' /etc/os-release | tr -d '"'; fi)
-export WSL_DISTRO_NAME="Ubuntu-${repo_version}"
+# repo_version=$(if command -v lsb_release &> /dev/null; then lsb_release -r -s; else grep -oP '(?<=^VERSION_ID=).+' /etc/os-release | tr -d '"'; fi)
+# export WSL_DISTRO_NAME="Ubuntu-${repo_version}"
 
 
 [[ /usr/local/bin/kubectl ]] && source <(kubectl completion zsh)
@@ -144,6 +138,19 @@ export DOTNET_ROOT=/usr/share/dotnet
 # export DOTNET_ROOT=$HOME/.dotnet
 export PATH="$PATH:$DOTNET_ROOT:$DOTNET_ROOT/tools:$HOME/go/bin:/usr/local/go/bin:$HOME/bin:$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$BUN_INSTALL/bin"
 
-# greeting
+# The following lines were added by compinstall
+
+zstyle ':completion:*' completer _expand _ignored _approximate
+zstyle ':completion:*' format 'Completing %d'
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*' matcher-list '' 'm:{[:lower:]}={[:upper:]}' 'l:|=* r:|=*' 'l:|=* r:|=*'
+zstyle ':completion:*' menu select=5
+zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
+zstyle :compinstall filename '/home/sohan/.zshrc'
+
+autoload -Uz compinit
+compinit
+# End of lines added by compinstall
+
 
 # zprof
