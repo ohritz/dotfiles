@@ -22,8 +22,11 @@ ZSH_THEME_GIT_PROMPT_DIVERGED_REMOTE="%{$fg_bold[magenta]%}↕%{$reset_color%}"
 ZSH_THEME_NVM_PROMPT_PREFIX=" [%{$fg[magenta]%}\uE718 "
 ZSH_THEME_NVM_PROMPT_SUFFIX="%{$reset_color%}]"
 
+ZSH_THEME_KUBECTX_PROMT_PREFIX="-["
+ZSH_THEME_KUBECTX_PROMT_SUFFIX="]"
+
 PROMPT='┌[$(emoji-clock)%{$fg[green]%}%*%{$reset_color%}]$(git_prompt_info)$(git_remote_status) $(git_prompt_status)
-├[%{$fg[green]%}%~%{$reset_color%}]-$(_conditional_kubectx_prompt_info)
+├[%{$fg[green]%}%~%{$reset_color%}]$(_conditional_kubectx_prompt_info)
 └➤'
 
 RPROMPT='$(_conditional_nvm_prompt)'
