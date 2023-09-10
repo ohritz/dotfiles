@@ -1,8 +1,4 @@
 
-gitcm () {
-    git commit -m "$*"
-}
-
 git-remote:gone:ls() {
     git fetch --all -p; git branch -vv | grep ": gone]" | awk '{ print $1 }'
 }
@@ -70,9 +66,4 @@ git-create-pr-draft() {
 
     local prTitle="Task $taskId: $pbiTitle (AB#$taskId)"
     gh pr create -d --title $prTitle --fill
-}
-
-g_tst() {
-    local body="${2:-''}"
-    echo "${body}"
 }
