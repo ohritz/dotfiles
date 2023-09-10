@@ -13,7 +13,7 @@ greeting() {
     local myname=$(whoami)
     local f_msg=$(fortune -as)
     local msg="Hello ${myname}! \n\n ${f_msg}"
-
+    
     printf ${Green}
     echo "${msg}" | cowsay -f tux -pn
     printf ${Color_End}
@@ -27,7 +27,4 @@ is_interactive() {
   return 1
 }
 
-get-nemo-jwt() {
-  local PROJECTS_ROOT="${HOME}/dev/lab/tm-token-getter"
-  node "${PROJECTS_ROOT}/index.js"
-}
+alias get-nemo-jwt="fetch-auth0-token"
