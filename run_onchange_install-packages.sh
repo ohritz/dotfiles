@@ -25,7 +25,8 @@ install_packages() {
   dotnet-sdk-6.0 \
   gpg-agent \
   python3-pygments \
-  fzf
+  fzf \
+  keychain
 }
 
 add_microsoft_repo
