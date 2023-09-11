@@ -1,0 +1,11 @@
+{{- if ne .chezmoi.os "linux" }}
+# only manage on debian system
+.ssh
+.gnupg
+.brew-list
+run_once_after_add-gpg.sh.tmpl
+run_once_before_install-shell-lpass.sh
+run_onchange_after_brew-list-load.sh.tmpl
+run_onchange_install-packages.sh
+run_onchange_install-packages.sh
+{{- end }}
