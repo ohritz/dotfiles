@@ -75,7 +75,7 @@ zstyle ':omz:plugins:keychain' agents gpg,ssh
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(zsh-compinit-load emoji emoji-clock colorize zsh-autosuggestions zsh-syntax-highlighting docker docker-compose azure dotnet pj git gitfast kubectx gh gpg-agent keychain nvm oc sudo zsh-interactive-cd magic-enter history-substring-search)
+plugins=(zsh-compinit-load emoji emoji-clock colorize zsh-autosuggestions zsh-syntax-highlighting docker docker-compose azure dotnet pj kubectx gh gpg-agent keychain nvm oc sudo zsh-interactive-cd magic-enter history-substring-search git)
 
 source "${HOME}/.conf-env"
 source "$TM_LOCAL_DEV_PATH/aliases"
