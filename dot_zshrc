@@ -1,104 +1,9 @@
 # uncomment this and zprof at the end of the file to enable profiler
 # zmodload zsh/zprof
 
-# Path to your oh-my-zsh installation.
-export ZSH="/home/sohan/.oh-my-zsh"
-
-# Set name of the theme to load --- if set to "random", it will
-# load a random theme each time oh-my-zsh is loaded, in which case,
-# to know which specific one was loaded, run: echo $RANDOM_THEME
-# See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="skipper"
-
-# Set list of themes to pick from when loading at random
-# Setting this variable when ZSH_THEME=random will cause zsh to load
-# a theme from this variable instead of looking in $ZSH/themes/
-# If set to an empty array, this variable will have no effect.
-# ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
-
-# Uncomment the following line to use case-sensitive completion.
-# CASE_SENSITIVE="true"
-
-# Uncomment the following line to use hyphen-insensitive completion.
-# Case-sensitive completion must be off. _ and - will be interchangeable.
-# HYPHEN_INSENSITIVE="true"
-
-# Uncomment the following line to disable bi-weekly auto-update checks.
-DISABLE_AUTO_UPDATE="true"
-
-# Uncomment the following line to automatically update without prompting.
-# DISABLE_UPDATE_PROMPT="true"
-
-# Uncomment the following line to change how often to auto-update (in days).
-# export UPDATE_ZSH_DAYS=13
-
-# Uncomment the following line if pasting URLs and other text is messed up.
-# DISABLE_MAGIC_FUNCTIONS="true"
-
-# Uncomment the following line to disable colors in ls.
-# DISABLE_LS_COLORS="true"
-
-# Uncomment the following line to disable auto-setting terminal title.
-# DISABLE_AUTO_TITLE="true"
-
-# Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
-
-# Uncomment the following line to display red dots whilst waiting for completion.
-# Caution: this setting can cause issues with multiline prompts (zsh 5.7.1 and newer seem to work)
-# See https://github.com/ohmyzsh/ohmyzsh/issues/5765
-# COMPLETION_WAITING_DOTS="true"
-
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
-
-# Uncomment the following line if you want to change the command execution time
-# stamp shown in the history command output.
-# You can set one of the optional three formats:
-# "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
-# or set a custom format using the strftime function format specifications,
-# see 'man strftime' for details.
-HIST_STAMPS="dd.mm.yyyy"
-
-# Would you like to use another custom folder than $ZSH/custom?
-ZSH_CUSTOM="${HOME}/.zsh-custom"
-
-zstyle ':omz:plugins:nvm' autoload yes
-zstyle ':omz:plugins:ssh-agent' lifetime 4h
-zstyle ':omz:plugins:keychain' agents gpg,ssh
-
-
-# Which plugins would you like to load?
-# Standard plugins can be found in $ZSH/plugins/
-# Custom plugins may be added to $ZSH_CUSTOM/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
-plugins=(zsh-compinit-load emoji emoji-clock colorize zsh-autosuggestions zsh-syntax-highlighting docker docker-compose azure dotnet pj kubectx gh gpg-agent keychain nvm oc sudo zsh-interactive-cd magic-enter history-substring-search git)
-
-source "${HOME}/.conf-env"
-source "$TM_LOCAL_DEV_PATH/aliases"
-# FPATH="$TM_LOCAL_DEV_PATH/completions:$FPATH"
-# FPATH="$TM_LOCAL_DEV_PATH/completions:$FPATH"
-PROJECT_PATHS=(~/data/projects/stena ~/data/projects ~/data/projects/lab)
-
-fpath=("$TM_LOCAL_DEV_PATH"completions $fpath)
-fpath=("/home/linuxbrew/.linuxbrew/share/zsh/site-functions" $fpath)
-
-source $ZSH/oh-my-zsh.sh
-
-source "${HOME}/.global-env"
-
-# User configuration
-
-# export MANPATH="/usr/local/man:$MANPATH"
-
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
-
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+[ ! -d $ZINIT_HOME ] && mkdir -p "$(dirname $ZINIT_HOME)"
+[ ! -d $ZINIT_HOME/.git ] && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
 
 # set PATH so it includes user's private bin if it exists
 if [ -d "$HOME/bin" ] ; then
@@ -110,23 +15,126 @@ if [ -d "$HOME/.local/bin" ] ; then
   PATH="$HOME/.local/bin:$PATH"
 fi
 
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+# Uncomment the following line to disable colors in ls.
+# DISABLE_LS_COLORS="true"
+
+# Uncomment the following line to disable auto-setting terminal title.
+# DISABLE_AUTO_TITLE="true"
+
+HIST_STAMPS="dd.mm.yyyy"
+
+# Would you like to use another custom folder than $ZSH/custom?
+ZSH_CUSTOM="${HOME}/.zsh-custom"
 
 export DEFAULT_USER="sohan"
-
 export GPG_TTY=$(tty)
-
 export GPG_AGENT_INFO=${HOME}/.gnupg/S.gpg-agent:0:1
+export NVM_DIR="${HOME}/.nvm"
 
+source "${HOME}/.conf-env"
+source "${TM_LOCAL_DEV_PATH}/aliases"
+source "${ZINIT_HOME}/zinit.zsh"
+
+zinit snippet OMZP::kubectx
+source "${HOME}/.global-env"
+
+zstyle ':omz:plugins:nvm' autoload yes
+zstyle ':omz:plugins:ssh-agent' lifetime 4h
+zstyle ':omz:plugins:keychain' agents gpg,ssh
+PROJECT_PATHS=(~/data/projects/stena ~/data/projects ~/data/projects/lab)
+
+zinit wait lucid for \
+        OMZL::git.zsh \
+        OMZL::nvm.zsh \
+        OMZL::compfix.zsh \
+        OMZL::completion.zsh \
+        OMZL::directories.zsh \
+        OMZL::history.zsh \
+        OMZL::functions.zsh \
+        OMZL::termsupport.zsh
+
+PS1="-➤" # provide a simple prompt till the theme loads
+
+
+zinit wait lucid for \
+        OMZL::prompt_info_functions.zsh \
+        OMZL::spectrum.zsh \
+        OMZL::theme-and-appearance.zsh \
+        OMZP::emoji-clock \
+        OMZP::git \
+        as"snippet" \
+          OMZP::/emoji
+
+zinit wait lucid for \
+  OMZP::gpg-agent \
+  OMZP::keychain
+
+zinit snippet $ZSH_CUSTOM/themes/skipper/helpers.zsh
+zinit ice wait'!'
+zinit snippet $ZSH_CUSTOM/themes/skipper/skipper.zsh-theme
+
+for file in $(find $ZSH_CUSTOM -maxdepth 1 -name '*.zsh')
+do
+    [ -s "${file}" ] && zinit snippet "${file}"
+done
+
+
+# Which plugins would you like to load?
+# Standard plugins can be found in $ZSH/plugins/
+# Custom plugins may be added to $ZSH_CUSTOM/plugins/
+# Example format: plugins=(rails git textmate ruby lighthouse)
+# Add wisely, as too many plugins slow down shell startup.
+# plugins=(colorize zsh-autosuggestions zsh-syntax-highlighting docker docker-compose azure dotnet pj kubectx gh gpg-agent keychain nvm oc sudo zsh-interactive-cd magic-enter history-substring-search)
+
+zinit wait lucid for \
+  OMZP::pj \
+  OMZP::nvm \
+  OMZP::sudo \
+  OMZP::zsh-interactive-cd \
+  OMZP::magic-enter \
+  OMZP::colorize \
+  as"snippet" \
+    OMZP::history-substring-search \
+  atinit"zicompinit; zicdreplay"  \
+    zdharma-continuum/fast-syntax-highlighting \
+  atload'_zsh_autosuggest_start' \
+    zsh-users/zsh-autosuggestions \
+  as"completion" \
+    OMZP::gh
+
+zinit ice blockf
+zinit light zsh-users/zsh-completions
+
+zinit ice as"completion"
+zinit snippet https://github.com/docker/cli/blob/master/contrib/completion/zsh/_docker
+
+# docker-compose
+# azure
+# dotnet
+# gh
+# oc
+
+fpath=("$TM_LOCAL_DEV_PATH"completions $fpath)
+# fpath=("/home/linuxbrew/.linuxbrew/share/zsh/site-functions" $fpath)
+
+
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+zi ice atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh" nocompile'!'
+zi light trapd00r/LS_COLORS
 
 # set_buildtools_ca | set_buildtools_nemo in .oh-my-zsh/custom/
 set_buildtools_nemo
 
-[[ /usr/local/bin/kubectl ]] && source <(kubectl completion zsh)
+# [[ /usr/local/bin/kubectl ]] && source <(kubectl completion zsh)
 
 export DOTNET_ROOT=/usr/share/dotnet
-# export DOTNET_ROOT=$HOME/.dotnet
 export PATH="$PATH:$DOTNET_ROOT:$DOTNET_ROOT/tools:$HOME/go/bin:/usr/local/go/bin:$HOME/bin:$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$BUN_INSTALL/bin"
+
+zinit from"gh-r" as"program" mv"direnv* -> direnv" \
+    atclone'./direnv hook zsh > zhook.zsh' atpull'%atclone' \
+    pick"direnv" src="zhook.zsh" for \
+        direnv/direnv
 
 # The following lines were added by compinstall
 
@@ -142,5 +150,8 @@ autoload -Uz compinit
 compinit
 # End of lines added by compinstall
 
+
+autoload -Uz _zinit
+(( ${+_comps} )) && _comps[zinit]=_zinit
 
 # zprof
