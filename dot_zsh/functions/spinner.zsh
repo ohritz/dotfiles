@@ -1,4 +1,4 @@
-source $ZSH_CUSTOM/_spinner.sh
+source $ZDOTDIR/functions/_spinner.sh
 
 function spinner() {
   local pid=$1

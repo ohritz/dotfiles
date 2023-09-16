@@ -1,16 +1,14 @@
-
 # https://stuartleeks.com/posts/wsl-ssh-key-forward-to-windows/
-# Red='\033[0;31m'
-# Green='\033[0;32m'
-# Yellow='\033[0;33m'
-# Color_End='\033[0m'
 
 ensure_ssh() {
   export SSH_AUTH_SOCK=$HOME/.ssh/agent.sock
   # Configure ssh forwarding
   # need ps -ww to get non-truncated command for matching
   # use square brackets to generate a regex match for the process we want but that doesn't match the grep command running it!
-  ALREADY_RUNNING=$(ps -auxww | grep -q "[n]piperelay.exe -ei -s //./pipe/openssh-ssh-agent"; echo $?)
+  ALREADY_RUNNING=$(
+    ps -auxww | grep -q "[n]piperelay.exe -ei -s //./pipe/openssh-ssh-agent"
+    echo $?
+  )
   if [[ $ALREADY_RUNNING != "0" ]]; then
     if [[ -S $SSH_AUTH_SOCK ]]; then
       # not expecting the socket to exist as the forwarding command isn't running (http://www.tldp.org/LDP/abs/html/fto.html)
@@ -28,7 +26,7 @@ ensure_ssh() {
 
 check_ssh() {
   local result
-  
+
   result="$(ssh -T git@github.com 2>&1)"
   if [[ $? == 1 ]] && [[ "$result" == *"successfully authenticated"* ]]; then
     echo -e "[${Green}Success${Color_End}] - SSH Agent can authenticate to GitHub"
@@ -39,10 +37,10 @@ check_ssh() {
   fi
 }
 
-wsl-vpnkit()  {
+wsl-vpnkit() {
   wsl.exe -d wsl-vpnkit service wsl-vpnkit start
 }
 
-wsl-vpnkit:stop()  {
+wsl-vpnkit:stop() {
   wsl.exe -d wsl-vpnkit service wsl-vpnkit stop
 }
