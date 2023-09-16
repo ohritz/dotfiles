@@ -1,5 +1,7 @@
+################################################################################
 # uncomment this and zprof at the end of the file to enable profiler
 # zmodload zsh/zprof
+################################################################################
 
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 [ ! -d $ZINIT_HOME ] && mkdir -p "$(dirname $ZINIT_HOME)"
@@ -15,28 +17,19 @@ if [ -d "$HOME/.local/bin" ] ; then
   PATH="$HOME/.local/bin:$PATH"
 fi
 
-# Uncomment the following line to disable colors in ls.
-# DISABLE_LS_COLORS="true"
-
-# Uncomment the following line to disable auto-setting terminal title.
-# DISABLE_AUTO_TITLE="true"
-
 HIST_STAMPS="dd.mm.yyyy"
-
-# Would you like to use another custom folder than $ZSH/custom?
-ZSH_CUSTOM="${HOME}/.zsh-custom"
 
 export DEFAULT_USER="sohan"
 export GPG_TTY=$(tty)
 export GPG_AGENT_INFO=${HOME}/.gnupg/S.gpg-agent:0:1
 export NVM_DIR="${HOME}/.nvm"
 
-source "${HOME}/.conf-env"
+source "${ZDOTDIR}/.conf-env"
 source "${TM_LOCAL_DEV_PATH}/aliases"
 source "${ZINIT_HOME}/zinit.zsh"
 
 zinit snippet OMZP::kubectx
-source "${HOME}/.global-env"
+source "${ZDOTDIR}/.global-env"
 
 zstyle ':omz:plugins:nvm' autoload yes
 zstyle ':omz:plugins:ssh-agent' lifetime 4h
@@ -46,20 +39,19 @@ PROJECT_PATHS=(~/data/projects/stena ~/data/projects ~/data/projects/lab)
 zinit wait lucid for \
         OMZL::git.zsh \
         OMZL::nvm.zsh \
-        OMZL::compfix.zsh \
         OMZL::completion.zsh \
         OMZL::directories.zsh \
         OMZL::history.zsh \
+        OMZL::spectrum.zsh \
+        OMZL::key-bindings.zsh \
         OMZL::functions.zsh \
+        OMZL::theme-and-appearance.zsh \
         OMZL::termsupport.zsh
 
 PS1="-➤" # provide a simple prompt till the theme loads
 
 
 zinit wait lucid for \
-        OMZL::prompt_info_functions.zsh \
-        OMZL::spectrum.zsh \
-        OMZL::theme-and-appearance.zsh \
         OMZP::emoji-clock \
         OMZP::git \
         as"snippet" \
@@ -69,64 +61,24 @@ zinit wait lucid for \
   OMZP::gpg-agent \
   OMZP::keychain
 
-zinit snippet $ZSH_CUSTOM/themes/skipper/helpers.zsh
-zinit ice wait'!'
-zinit snippet $ZSH_CUSTOM/themes/skipper/skipper.zsh-theme
-
-for file in $(find $ZSH_CUSTOM -maxdepth 1 -name '*.zsh')
+for file in $(find "$ZDOTDIR/functions" -maxdepth 1 -name '*.zsh')
 do
-    [ -s "${file}" ] && zinit snippet "${file}"
+    [ -s "${file}" ] && zinit ice id-as"$(basename ${file})" nocompile && zinit snippet "${file}"
 done
 
-
-# Which plugins would you like to load?
-# Standard plugins can be found in $ZSH/plugins/
-# Custom plugins may be added to $ZSH_CUSTOM/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
-# plugins=(colorize zsh-autosuggestions zsh-syntax-highlighting docker docker-compose azure dotnet pj kubectx gh gpg-agent keychain nvm oc sudo zsh-interactive-cd magic-enter history-substring-search)
-
-zinit wait lucid for \
-  OMZP::pj \
-  OMZP::nvm \
-  OMZP::sudo \
-  OMZP::zsh-interactive-cd \
-  OMZP::magic-enter \
-  OMZP::colorize \
-  as"snippet" \
-    OMZP::history-substring-search \
-  atinit"zicompinit; zicdreplay"  \
-    zdharma-continuum/fast-syntax-highlighting \
-  atload'_zsh_autosuggest_start' \
-    zsh-users/zsh-autosuggestions \
-  as"completion" \
-    OMZP::gh
+zinit ice wait'!' lucid id-as"skipper.zsh-theme"
+zinit snippet $ZDOTDIR/themes/skipper.zsh-theme
 
 zinit ice blockf
 zinit light zsh-users/zsh-completions
 
-zinit ice as"completion"
-zinit snippet https://github.com/docker/cli/blob/master/contrib/completion/zsh/_docker
-
-# docker-compose
-# azure
-# dotnet
-# gh
-# oc
-
-fpath=("$TM_LOCAL_DEV_PATH"completions $fpath)
-# fpath=("/home/linuxbrew/.linuxbrew/share/zsh/site-functions" $fpath)
-
-
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
-zi ice atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh" nocompile'!'
-zi light trapd00r/LS_COLORS
+zinit ice atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh" nocompile'!'
+zinit light trapd00r/LS_COLORS
 
 # set_buildtools_ca | set_buildtools_nemo in .oh-my-zsh/custom/
 set_buildtools_nemo
-
-# [[ /usr/local/bin/kubectl ]] && source <(kubectl completion zsh)
 
 export DOTNET_ROOT=/usr/share/dotnet
 export PATH="$PATH:$DOTNET_ROOT:$DOTNET_ROOT/tools:$HOME/go/bin:/usr/local/go/bin:$HOME/bin:$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$BUN_INSTALL/bin"
@@ -144,14 +96,33 @@ zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*' matcher-list '' 'm:{[:lower:]}={[:upper:]}' 'l:|=* r:|=*' 'l:|=* r:|=*'
 zstyle ':completion:*' menu select=5
 zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
-zstyle :compinstall filename '/home/sohan/.zshrc'
+zstyle :compinstall filename '/home/sohan/.zsh/.zshrc'
 
-autoload -Uz compinit
-compinit
-# End of lines added by compinstall
+zinit wait'1' lucid for \
+  OMZP::pj \
+  OMZP::nvm \
+  OMZP::sudo \
+  OMZP::zsh-interactive-cd \
+  OMZP::magic-enter \
+  OMZP::colorize \
+  OMZP::azure \
+  as"snippet" \
+    OMZP::dotnet \
+  as"snippet" \
+    OMZP::history-substring-search \
+  atload'_zsh_autosuggest_start' \
+    zsh-users/zsh-autosuggestions
 
+zinit lucid wait"2" for \
+  as"completion" \
+    OMZP::docker-compose/_docker-compose
 
-autoload -Uz _zinit
-(( ${+_comps} )) && _comps[zinit]=_zinit
+zinit for \
+  atload"zicompinit; zicdreplay" \
+  blockf \
+  lucid \
+  wait"3" \
+  zdharma-continuum/fast-syntax-highlighting
 
+################################################################################
 # zprof

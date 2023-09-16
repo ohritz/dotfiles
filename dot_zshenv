@@ -1,0 +1,6 @@
+#!/usr/bin/env zsh
+#
+# THIS FILE IS FOR USER SPECIFIC SETTINGS ONLY
+
+skip_global_compinit=1
+export ZDOTDIR="${ZDOTDIR:-"$HOME/.zsh"}"
