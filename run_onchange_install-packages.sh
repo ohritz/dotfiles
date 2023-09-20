@@ -32,7 +32,8 @@ install_packages() {
       gpg-agent \
       python3-pygments \
       fzf \
-      keychain
+      keychain \
+      subversion
 }
 
 add_microsoft_repo
