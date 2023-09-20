@@ -7,6 +7,9 @@ get_version() {
 }
 
 add_microsoft_repo() {
+  # todo: make it conditional
+  # check that repo is not already added
+
   local version="$(get_version)"
   # Download Microsoft signing key and repository
   wget "https://packages.microsoft.com/config/ubuntu/${version}/packages-microsoft-prod.deb" -O packages-microsoft-prod.deb
@@ -17,8 +20,9 @@ add_microsoft_repo() {
   # Clean up
   rm packages-microsoft-prod.deb
 
-  touch /etc/apt/preferences
-  echo "Package: *dotnet* \nPin: origin "archive.ubuntu.com" \nPin-Priority: 1000" >>/etc/apt/preferences
+  ## https://learn.microsoft.com/en-us/dotnet/core/install/linux-package-mixup?pivots=os-linux-ubuntu#i-need-a-version-of-net-that-isnt-provided-by-my-linux-distribution
+  # touch /etc/apt/preferences
+  # echo "Package: *dotnet* \nPin: origin "archive.ubuntu.com" \nPin-Priority: 1000" >>/etc/apt/preferences
 }
 
 install_packages() {
