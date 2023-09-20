@@ -1,9 +1,10 @@
-
-
-dateFromUnixMs() {
-    echo $(date -d @$((($1 + 500)/1000)))
+dateNowInMs() {
+    echo $(date +%s%N | cut -b1-13)
 }
 
+dateFromUnixMs() {
+    echo $(date -d @$((($1 + 500) / 1000)))
+}
 
 conc() {
     cmd=("${@:3}")
