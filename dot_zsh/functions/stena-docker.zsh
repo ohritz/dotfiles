@@ -1,7 +1,10 @@
-
 PROJECTS_ROOT="${HOME}/dev/stena"
 export DOCKER_REGISTRY="quay.io"
 TAG_REPO="${DOCKER_REGISTRY}/stena"
+
+reload_local_dev() {
+    source "${TM_LOCAL_DEV_PATH}/aliases"
+}
 
 build:docker() {
     docker build $1 -t $2
