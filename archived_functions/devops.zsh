@@ -1,5 +1,3 @@
-
-
 login_az_devops() {
   if [[ -z $AZURE_DEVOPS_EXT_PAT ]]; then
     echo $TM_NUGET_FEED_TOKEN | az devops login --only-show-errors
@@ -18,7 +16,6 @@ get_board_item_title() {
   local title=$(az boards work-item show --id ${taskId} | jq -r '.fields ."System.Title"')
   echo $title
 }
-
 
 ready-to-pull() {
   local taskId="${1:?Must supply a PBI Id}"
