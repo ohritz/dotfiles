@@ -28,7 +28,15 @@ source "${ZDOTDIR}/.conf-env"
 source "${TM_LOCAL_DEV_PATH}/aliases"
 source "${ZINIT_HOME}/zinit.zsh"
 
+# zinit for \
+#   as"snippet" \
+#     OMZP::kubectx \
+#   as"snippet" \
+#     OMZP::emoji
 zinit snippet OMZP::kubectx
+zinit ice svn multisrc"{emoji.plugin,emoji-char-definitions}.zsh" pick"/dev/null"
+zinit snippet https://github.com/ohmyzsh/ohmyzsh/trunk/plugins/emoji
+
 source "${ZDOTDIR}/.global-env"
 
 zstyle ':omz:plugins:nvm' autoload yes
@@ -48,14 +56,13 @@ zinit wait lucid for \
         OMZL::theme-and-appearance.zsh \
         OMZL::termsupport.zsh
 
-PS1="-➤" # provide a simple prompt till the theme loads
+PS1="-⮞" # provide a simple prompt till the theme loads
 
+        # mafredri/zsh-async \
 
 zinit wait lucid for \
         OMZP::emoji-clock \
-        OMZP::git \
-        as"snippet" \
-          OMZP::/emoji
+        OMZP::git
 
 zinit wait lucid for \
   OMZP::gpg-agent \
@@ -66,8 +73,19 @@ do
     [ -s "${file}" ] && zinit ice id-as"$(basename ${file})" nocompile && zinit snippet "${file}"
 done
 
-zinit ice wait'!' lucid id-as"skipper.zsh-theme"
-zinit snippet $ZDOTDIR/themes/skipper.zsh-theme
+# zinit ice wait'!' lucid
+# zinit snippet https://github.com/ohritz/dotfiles/blob/main/dot_zsh/themes/skipper.zsh-theme
+
+## local skipper
+# zinit ice wait'!' lucid id-as"skipper.zsh-theme"
+# zinit snippet $ZDOTDIR/themes/skipper.zsh-theme
+
+# WIP skipper async
+zinit ice wait'!' compile'(skipper-async|async).zsh' pick'async.zsh' src'skipper-async.zsh' id-as"skipper-async.zsh"
+zinit light $ZDOTDIR/themes
+
+# source ${HOME}/.local/share/chezmoi/dot_zsh/themes/async.zsh
+# source ${HOME}/.local/share/chezmoi/dot_zsh/themes/skipper-async.zsh
 
 zinit ice blockf
 zinit light zsh-users/zsh-completions
