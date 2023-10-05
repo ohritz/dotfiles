@@ -1,8 +1,7 @@
+STORE_FOLDER=${STORE_FOLDER:-"$HOME/.tm"}
 
-TM_CONFIG_FOLDER="$HOME/.tm"
-
-if [ ! -d "$TM_CONFIG_FOLDER" ]; then
-  mkdir "$TM_CONFIG_FOLDER"
+if [ ! -d "$STORE_FOLDER" ]; then
+  mkdir "$STORE_FOLDER"
 fi
 
 _debug() {
@@ -14,27 +13,27 @@ _debug() {
 _write-token() {
   local token="${1:?"Missing token"}"
   local expires_at="${2:?"Missing expires_at"}"
-  
-  _debug "writing token to $TM_CONFIG_FOLDER/token"
-  echo "$token" > "$TM_CONFIG_FOLDER/token"
-  _debug "writing expires_at to $TM_CONFIG_FOLDER/expires_at"
-  echo "$expires_at" > "$TM_CONFIG_FOLDER/expires_at"
+
+  _debug "writing token to $STORE_FOLDER/token"
+  echo "$token" >"$STORE_FOLDER/token"
+  _debug "writing expires_at to $STORE_FOLDER/expires_at"
+  echo "$expires_at" >"$STORE_FOLDER/expires_at"
 }
 
 _read-token() {
   local token
   local expires_at
-  _debug "reading token from $TM_CONFIG_FOLDER/token"
-  if [ -f "$TM_CONFIG_FOLDER/token" ]; then
-    token=$(cat "$TM_CONFIG_FOLDER/token")
+  _debug "reading token from $STORE_FOLDER/token"
+  if [ -f "$STORE_FOLDER/token" ]; then
+    token=$(cat "$STORE_FOLDER/token")
   fi
   echo "$token"
 }
 
 _read-expires_at() {
   local expires_at
-  if [ -f "$TM_CONFIG_FOLDER/expires_at" ]; then
-    expires_at=$(cat "$TM_CONFIG_FOLDER/expires_at")
+  if [ -f "$STORE_FOLDER/expires_at" ]; then
+    expires_at=$(cat "$STORE_FOLDER/expires_at")
   fi
   echo "${expires_at:-0}"
 }
@@ -47,18 +46,19 @@ _fetch-new-token() {
   local token
   local tempout=$(mktemp)
   trap "rm -f $tempout" EXIT
-  local client_id="${OAUTH_CLIENT_ID}"
-  local client_secret="${OAUTH_CLIENT_SECRET}"
-  local audience="${OAUTH_AUDIENCE}"
+  local client_id="${OAUTH_CLIENT_ID:?"Missing OAUTH_CLIENT_ID"}"
+  local client_secret="${OAUTH_CLIENT_SECRET:?"Missing OAUTH_CLIENT_SECRET"}"
+  local audience="${OAUTH_AUDIENCE:?"Missing OAUTH_AUDIENCE"}"
+  local issuer="${OAUTH_ISSUER:?"Missing OAUTH_ISSUER"}"
   local grant_type="client_credentials"
-  
+
   curl -s -X POST \
-  -H "Content-Type: application/json" \
-  -H "Accept: application/json" \
-  --progress-bar \
-  -d "{\"client_id\":\"$client_id\",\"client_secret\":\"$client_secret\",\"audience\":\"$audience\",\"grant_type\":\"$grant_type\"}" \
-  -o $tempout \
-  "${OAUTH_ISSUER}"
+    -H "Content-Type: application/json" \
+    -H "Accept: application/json" \
+    --progress-bar \
+    -d "{\"client_id\":\"$client_id\",\"client_secret\":\"$client_secret\",\"audience\":\"$audience\",\"grant_type\":\"$grant_type\"}" \
+    -o $tempout \
+    "${issuer}"
   local output=$(cat $tempout)
   echo $output
 }
@@ -72,10 +72,9 @@ fetch-auth0-token() {
   if [[ "$1" == "--debug" ]]; then
     TM_TOKEN_GETTER_DEBUG=1
   fi
-  
+
   trap "unset TM_TOKEN_GETTER_DEBUG" EXIT
-  
-  
+
   if [ "$expires_at" -gt "$current_time" ]; then
     _debug "token is still valid for $(((expires_at - current_time) / 60)) minutes"
     token=$(_read-token)
