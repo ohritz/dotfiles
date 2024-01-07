@@ -1,4 +1,9 @@
 #!/bin/bash
 
-# .brew-list hash: {{ include ".brew-list" | sha256sum }}
-brew install $(cat {{ joinPath .chezmoi.sourceDir ".brew-list" | quote }})
+# Brewfile hash: {{ include "Brewfile" | sha256sum }}
+brew update && brew upgrade
+brew bundle -v || (echo "Brewfile failed, exiting early" && exit 1)
+brew cleanup
+if brew list | grep node; then
+    brew uninstall --ignore-dependencies node
+fi
