@@ -17,6 +17,10 @@ if [ -d "$HOME/.local/bin" ] ; then
   PATH="$HOME/.local/bin:$PATH"
 fi
 
+if [ -d "$HOME/.dotnet/tools" ] ; then
+  PATH="$HOME/.dotnet/tools:$PATH"
+fi
+
 HIST_STAMPS="dd.mm.yyyy"
 
 export DEFAULT_USER="sohan"
@@ -101,9 +105,13 @@ set_buildtools_nemo
 export DOTNET_ROOT=/usr/share/dotnet
 export PATH="$PATH:$DOTNET_ROOT:$DOTNET_ROOT/tools:$HOME/go/bin:/usr/local/go/bin:$HOME/bin:$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$BUN_INSTALL/bin"
 
-zinit from"gh-r" as"program" mv"direnv* -> direnv" \
-    atclone'./direnv hook zsh > zhook.zsh' atpull'%atclone' \
-    pick"direnv" src="zhook.zsh" for \
+# zinit from"gh-r" as"program" mv"direnv* -> direnv" \
+#     atclone'./direnv hook zsh > zhook.zsh' atpull'%atclone' \
+#     pick"direnv" src="zhook.zsh" for \
+#         direnv/direnv
+
+zinit as"program" make'!' atclone'./direnv hook zsh > zhook.zsh' \
+    atpull'%atclone' pick"direnv" src"zhook.zsh" for \
         direnv/direnv
 
 # The following lines were added by compinstall
@@ -141,6 +149,8 @@ zinit for \
   lucid \
   wait"3" \
   zdharma-continuum/fast-syntax-highlighting
+
+ulimit -Sn 4096
 
 ################################################################################
 # zprof
