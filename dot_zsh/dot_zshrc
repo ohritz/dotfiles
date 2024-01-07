@@ -3,152 +3,74 @@
 # zmodload zsh/zprof
 ################################################################################
 
-ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
-[ ! -d $ZINIT_HOME ] && mkdir -p "$(dirname $ZINIT_HOME)"
-[ ! -d $ZINIT_HOME/.git ] && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
-
-# set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/bin" ] ; then
-  PATH="$HOME/bin:$PATH"
-fi
-
-# set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/.local/bin" ] ; then
-  PATH="$HOME/.local/bin:$PATH"
-fi
-
-if [ -d "$HOME/.dotnet/tools" ] ; then
-  PATH="$HOME/.dotnet/tools:$PATH"
-fi
-
 HIST_STAMPS="dd.mm.yyyy"
 
-export DEFAULT_USER="sohan"
-export GPG_TTY=$(tty)
-export GPG_AGENT_INFO=${HOME}/.gnupg/S.gpg-agent:0:1
-export NVM_DIR="${HOME}/.nvm"
-
-source "${ZDOTDIR}/.conf-env"
-source "${TM_LOCAL_DEV_PATH}/aliases"
-source "${ZINIT_HOME}/zinit.zsh"
-
-# zinit for \
-#   as"snippet" \
-#     OMZP::kubectx \
-#   as"snippet" \
-#     OMZP::emoji
-zinit snippet OMZP::kubectx
-zinit ice svn multisrc"{emoji.plugin,emoji-char-definitions}.zsh" pick"/dev/null"
-zinit snippet https://github.com/ohmyzsh/ohmyzsh/trunk/plugins/emoji
-
-source "${ZDOTDIR}/.global-env"
+# =============
+# omz plugin config
+# =============
 
 zstyle ':omz:plugins:nvm' autoload yes
 zstyle ':omz:plugins:ssh-agent' lifetime 4h
 zstyle ':omz:plugins:keychain' agents gpg,ssh
+
+# =============
+# fzf-tab config
+# =============
+
+# set descriptions format to enable group support
+zstyle ':completion:*:descriptions' format '[%d]'
+
+# preview directory's content with exa when completing cd
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'exa -1 --color=always $realpath'
+
+# switch group using `,` and `.`
+zstyle ':fzf-tab:*' switch-group ',' '.'
+
+# preview directory's content with exa when completing cd
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'exa -1 --color=always $realpath'
+
+# =============
+# Shell Options
+# man: zshoptions
+# =============
+
+# setopt interactive_comments
+setopt prompt_subst
+# setopt long_list_jobs           # show long list format job notifications
+
+# Set history behavior
+setopt share_history          # Share history across session
+setopt inc_append_history     # Dont overwrite history, add new entries immediately
+setopt extended_history       # Also record time and duration of commands.
+setopt hist_expire_dups_first # Clear duplicates when trimming internal hist.
+setopt hist_find_no_dups      # Dont display duplicates during searches.
+setopt hist_ignore_dups       # Ignore consecutive duplicates.
+setopt hist_reduce_blanks     # Remove superfluous blanks.
+setopt hist_save_no_dups      # Omit older commands in favor of newer ones.
+
 PROJECT_PATHS=(~/data/projects/stena ~/data/projects ~/data/projects/lab)
 
-zinit wait lucid for \
-        OMZL::git.zsh \
-        OMZL::nvm.zsh \
-        OMZL::completion.zsh \
-        OMZL::directories.zsh \
-        OMZL::history.zsh \
-        OMZL::spectrum.zsh \
-        OMZL::key-bindings.zsh \
-        OMZL::functions.zsh \
-        OMZL::theme-and-appearance.zsh \
-        OMZL::termsupport.zsh
+PS1="⮞" # provide a simple prompt till the theme loads
 
-PS1="-⮞" # provide a simple prompt till the theme loads
-
-        # mafredri/zsh-async \
-
-zinit wait lucid for \
-        OMZP::emoji-clock \
-        OMZP::git
-
-zinit wait lucid for \
-  OMZP::gpg-agent \
-  OMZP::keychain
-
-for file in $(find "$ZDOTDIR/functions" -maxdepth 1 -name '*.zsh')
-do
-    [ -s "${file}" ] && zinit ice id-as"$(basename ${file})" nocompile && zinit snippet "${file}"
-done
-
-# zinit ice wait'!' lucid
-# zinit snippet https://github.com/ohritz/dotfiles/blob/main/dot_zsh/themes/skipper.zsh-theme
-
-## local skipper
-# zinit ice wait'!' lucid id-as"skipper.zsh-theme"
-# zinit snippet $ZDOTDIR/themes/skipper.zsh-theme
-
-# WIP skipper async
-zinit ice wait'!' compile'(skipper-async|async).zsh' pick'async.zsh' src'skipper-async.zsh' id-as"skipper-async.zsh"
-zinit light $ZDOTDIR/themes
-
-# source ${HOME}/.local/share/chezmoi/dot_zsh/themes/async.zsh
-# source ${HOME}/.local/share/chezmoi/dot_zsh/themes/skipper-async.zsh
-
-zinit ice blockf
-zinit light zsh-users/zsh-completions
-
+# Evals
+# =============
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
-zinit ice atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh" nocompile'!'
-zinit light trapd00r/LS_COLORS
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+[ ! -d $ZINIT_HOME ] && mkdir -p "$(dirname $ZINIT_HOME)"
+[ ! -d $ZINIT_HOME/.git ] && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+source "${ZINIT_HOME}/zinit.zsh"
 
-# set_buildtools_ca | set_buildtools_nemo in .oh-my-zsh/custom/
+source "${ZDOTDIR}/.exports"
+source "${ZDOTDIR}/.secret-exports"
+
+source "${TM_LOCAL_DEV_PATH}/aliases"
+
+## load zinit plugins
+source "${ZDOTDIR}/.zsh_plugins"
+
+# set_buildtools_ca | set_buildtools_nemo
 set_buildtools_nemo
-
-export DOTNET_ROOT=/usr/share/dotnet
-export PATH="$PATH:$DOTNET_ROOT:$DOTNET_ROOT/tools:$HOME/go/bin:/usr/local/go/bin:$HOME/bin:$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$BUN_INSTALL/bin"
-
-# zinit from"gh-r" as"program" mv"direnv* -> direnv" \
-#     atclone'./direnv hook zsh > zhook.zsh' atpull'%atclone' \
-#     pick"direnv" src="zhook.zsh" for \
-#         direnv/direnv
-
-zinit as"program" make'!' atclone'./direnv hook zsh > zhook.zsh' \
-    atpull'%atclone' pick"direnv" src"zhook.zsh" for \
-        direnv/direnv
-
-# The following lines were added by compinstall
-
-zstyle ':completion:*' completer _expand _ignored _approximate
-zstyle ':completion:*' format 'Completing %d'
-zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-zstyle ':completion:*' matcher-list '' 'm:{[:lower:]}={[:upper:]}' 'l:|=* r:|=*' 'l:|=* r:|=*'
-zstyle ':completion:*' menu select=5
-zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
-zstyle :compinstall filename '/home/sohan/.zsh/.zshrc'
-
-zinit wait'1' lucid for \
-  OMZP::pj \
-  OMZP::nvm \
-  OMZP::sudo \
-  OMZP::zsh-interactive-cd \
-  OMZP::magic-enter \
-  OMZP::colorize \
-  OMZP::azure \
-  as"snippet" \
-    OMZP::dotnet \
-  as"snippet" \
-    OMZP::history-substring-search \
-  atload'_zsh_autosuggest_start' \
-    zsh-users/zsh-autosuggestions
-
-zinit lucid wait"2" for \
-  as"completion" \
-    OMZP::docker-compose/_docker-compose
-
-zinit for \
-  atload"zicompinit; zicdreplay" \
-  blockf \
-  lucid \
-  wait"3" \
-  zdharma-continuum/fast-syntax-highlighting
 
 ulimit -Sn 4096
 

@@ -1,6 +1,0 @@
-export EDITOR="code"
-export SUDO_EDITOR="nano"
-export STENA_PROJECTS_ROOT="${HOME}/data/projects/stena"
-export TM_LOCAL_DEV_PATH="${STENA_PROJECTS_ROOT}/tm-local-dev/"
-export TM_INFRASTRUCTURE_PATH="${STENA_PROJECTS_ROOT}/tm-infrastructure"
-export LPASS_AGENT_TIMEOUT=28800

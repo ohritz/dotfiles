@@ -1,0 +1,56 @@
+# set PATH so it includes user's private bin if it exists
+if [ -d "$HOME/bin" ]; then
+    PATH="$HOME/bin:$PATH"
+fi
+
+# set PATH so it includes user's private bin if it exists
+if [ -d "$HOME/.local/bin" ]; then
+    PATH="$HOME/.local/bin:$PATH"
+fi
+
+if [ -d "$HOME/.dotnet/tools" ]; then
+    PATH="$HOME/.dotnet/tools:$PATH"
+fi
+
+export EDITOR="code"
+export SUDO_EDITOR="nano"
+export PAGER=less
+export LESS=-R
+export STENA_PROJECTS_ROOT="${HOME}/data/projects/stena"
+export TM_LOCAL_DEV_PATH="${STENA_PROJECTS_ROOT}/tm-local-dev/"
+export TM_INFRASTRUCTURE_PATH="${STENA_PROJECTS_ROOT}/tm-infrastructure"
+
+export LPASS_AGENT_TIMEOUT=28800
+
+export DEFAULT_USER="sohan"
+export GPG_TTY=$(tty)
+export GPG_AGENT_INFO=${HOME}/.gnupg/S.gpg-agent:0:1
+export NVM_DIR="${HOME}/.nvm"
+
+export DOTNET_ROOT=/usr/share/dotnet
+export PATH="$PATH:$DOTNET_ROOT:$DOTNET_ROOT/tools:$HOME/go/bin:/usr/local/go/bin:$HOME/bin:$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$BUN_INSTALL/bin"
+
+# customize fzf defaults (so we can keep page up/down) + some keybindings
+export GIT_FUZZY_FZF_DEFAULT_OPTS="\
+  --border \
+  --layout=reverse \
+  --bind 'ctrl-s:toggle-sort' \
+  --bind 'change:top' \
+  --no-height"
+export GIT_FUZZY_STATUS_ADD_KEY='Ctrl-A'
+export GIT_FUZZY_STATUS_COMMIT_KEY='Ctrl-S'
+export GIT_FUZZY_STATUS_RESET_KEY='Ctrl-R'
+
+# https://github.com/wfxr/forgit/issues/287#issuecomment-1474824973
+export FORGIT_STASH_FZF_OPTS="--bind=\"ctrl-y:execute-silent(echo {} | cut -d: -f1 | tr -d '[:space:]' | pbcopy)\""
+# sort branches by commit date
+export FORGIT_CHECKOUT_BRANCH_BRANCH_GIT_OPTS="--sort=-committerdate"
+export FORGIT_FZF_DEFAULT_OPTS="--preview-window=nohidden"
+
+# support nvmrc lazy versions
+export ASDF_NODEJS_LEGACY_FILE_DYNAMIC_STRATEGY=latest_available
+
+# large shell history
+export HISTFILE="$ZDOTDIR/.zsh_history"
+export SAVEHIST=10000
+export HISTSIZE=11000
