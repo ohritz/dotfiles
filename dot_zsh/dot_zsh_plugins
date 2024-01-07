@@ -1,0 +1,74 @@
+zinit snippet OMZP::kubectx
+zinit ice svn multisrc"{emoji.plugin,emoji-char-definitions}.zsh" pick"/dev/null"
+zinit snippet https://github.com/ohmyzsh/ohmyzsh/trunk/plugins/emoji
+
+zinit wait lucid for \
+    OMZL::git.zsh \
+    OMZL::nvm.zsh \
+    OMZL::completion.zsh \
+    OMZL::directories.zsh \
+    OMZL::history.zsh \
+    OMZL::spectrum.zsh \
+    OMZL::key-bindings.zsh \
+    OMZL::functions.zsh \
+    OMZL::termsupport.zsh
+
+zinit wait lucid for \
+    OMZP::emoji-clock \
+    OMZP::git
+
+zinit wait lucid for \
+    OMZP::gpg-agent \
+    OMZP::keychain
+
+## load all custom functions
+for file in $(find "$ZDOTDIR/functions" -maxdepth 1 -name '*.zsh'); do
+    [ -s "${file}" ] && zinit ice id-as"$(basename ${file})" nocompile && zinit snippet "${file}"
+done
+
+source "${ZDOTDIR}/.kubectx-mappings"
+
+zinit ice atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh" nocompile'!'
+zinit light trapd00r/LS_COLORS
+
+zinit wait lucid for \
+    mafredri/zsh-async \
+    redxtech/zsh-asdf-direnv \
+    atinit'zicompinit' atpull'zinit creinstall .' src'completions/git-forgit.zsh' wfxr/forgit \
+    blockf atpull'zinit creinstall  .' zsh-users/zsh-completions \
+    atinit"zicompinit; zicdreplay" zdharma/fast-syntax-highlighting \
+    atload'_zsh_autosuggest_start' zsh-users/zsh-autosuggestions \
+    Aloxaf/fzf-tab \
+    as"completion" \
+    OMZP::docker-compose/_docker-compose \
+    sudosubin/zsh-github-cli
+
+# must be loaded after syntax completion
+zinit load zsh-users/zsh-history-substring-search
+
+zinit wait'1' lucid for \
+    OMZP::pj \
+    OMZP::nvm \
+    OMZP::sudo \
+    OMZP::zsh-interactive-cd \
+    OMZP::magic-enter \
+    OMZP::colorize \
+    djui/alias-tips \
+    OMZP::azure \
+    as"snippet" \
+    OMZP::dotnet
+
+#################
+# must load theme last
+#################
+
+# zinit ice wait'!' lucid
+# zinit snippet https://github.com/ohritz/dotfiles/blob/main/dot_zsh/themes/skipper.zsh-theme
+
+## local skipper
+# zinit ice wait'!' lucid id-as"skipper.zsh-theme"
+# zinit snippet $ZDOTDIR/themes/skipper.zsh-theme
+
+# WIP skipper async
+zinit ice wait'!' compile'(skipper-async|async).zsh' pick'async.zsh' src'skipper-async.zsh' id-as"skipper-async.zsh"
+zinit light $ZDOTDIR/themes
