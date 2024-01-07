@@ -112,7 +112,7 @@ prompt_skipper_preprompt_render() {
 	# Initialize the preprompt array.
 	local -a preprompt_path_ctx_parts
 	local -a preprompt_time_git_parts
-	local -a preprompt_right_parts
+	# local -a preprompt_right_parts
 
 	preprompt_path_ctx_parts+=("%F{$sep_color}├[%f")
 
@@ -160,10 +160,10 @@ prompt_skipper_preprompt_render() {
 	typeset -g prompt_skipper_node_version
 	if [[ -n $prompt_skipper_node_version ]]; then
 		# preprompt_right_parts+=("%F{$prompt_skipper_colors[node:version]}${ZSH_THEME_NVM_PROMPT_PREFIX:-'[⬢'}%f")
-		preprompt_right_parts+=('${prompt_skipper_node_version}')
+		# preprompt_right_parts+=('${prompt_skipper_node_version}')
 		# preprompt_right_parts+=('${ZSH_THEME_NVM_PROMPT_SUFFIX:-]}')
 		RPROMPT="[⬢${prompt_skipper_node_version}]"
-		prompt_skipper_reset_prompt
+		# prompt_skipper_reset_prompt
 	fi
 
 	local cleaned_ps1='└➤'
@@ -238,6 +238,8 @@ prompt_skipper_precmd() {
 		fi
 	fi
 
+	prompt_skipper_refresh_node_version
+
 	# Make sure VIM prompt is reset.
 	prompt_skipper_reset_prompt_symbol
 
@@ -263,13 +265,6 @@ prompt_skipper_async_git_aliases() {
 	done
 
 	print -- ${(j:|:)pullalias}  # Join on pipe, for use in regex.
-}
-
-prompt_skipper_async_node_version() {
-	setopt localoptions noshwordsplit
-	which nvm &>/dev/null || return
-	# [[ -f package.json ]] && print ${$(nvm current)#v} || return
-	print ${$(nvm current)#v}
 }
 
 prompt_skipper_async_vcs_info() {
@@ -429,7 +424,6 @@ prompt_skipper_async_tasks() {
 	async_worker_eval "prompt_skipper" builtin cd -q $PWD
 
 	typeset -gA prompt_skipper_vcs_info
-    typeset -g prompt_skipper_node_version_changed
 
 	local -H MATCH MBEGIN MEND
 	if [[ $PWD != ${prompt_skipper_vcs_info[pwd]}* ]]; then
@@ -444,24 +438,17 @@ prompt_skipper_async_tasks() {
 		unset prompt_skipper_git_fetch_pattern
 		prompt_skipper_vcs_info[branch]=
 		prompt_skipper_vcs_info[top]=
-		unset prompt_skipper_node_version
-        prompt_skipper_node_version_changed=0
 	fi
 	unset MATCH MBEGIN MEND
 
 	async_job "prompt_skipper" prompt_skipper_async_vcs_info
-	async_job "prompt_skipper" prompt_skipper_async_node_version
-
-    if [[ $prompt_skipper_node_version_changed = 1 ]]; then
-        prompt_skipper_async_refresh
-    fi
 
 	[[ -n $prompt_skipper_vcs_info[top] ]] || return
 
-	prompt_skipper_async_refresh
+	prompt_skipper_async_git_refresh
 }
 
-prompt_skipper_async_refresh() {
+prompt_skipper_async_git_refresh() {
 	setopt localoptions noshwordsplit
 
 	if [[ -z $prompt_skipper_git_fetch_pattern ]]; then
@@ -564,7 +551,7 @@ prompt_skipper_async_callback() {
 
 			# The update has a Git top-level set, which means we just entered a new
 			# Git directory. Run the async refresh tasks.
-			[[ -n $info[top] ]] && [[ -z $prompt_skipper_vcs_info[top] ]] && prompt_skipper_async_refresh
+			[[ -n $info[top] ]] && [[ -z $prompt_skipper_vcs_info[top] ]] && prompt_skipper_async_git_refresh
 
 			# Always update branch, top-level and stash.
 			prompt_skipper_vcs_info[branch]=$info[branch]
@@ -632,15 +619,6 @@ prompt_skipper_async_callback() {
 			typeset -g prompt_skipper_git_stash=$output
 			[[ $prev_stash != $prompt_skipper_git_stash ]] && do_render=1
 			;;
-		prompt_skipper_async_node_version)
-            typeset -g prompt_skipper_node_version
-			local prev_version=$prompt_skipper_node_version
-			prompt_skipper_node_version=$output
-			if [[ $prev_version != $prompt_skipper_node_version ]] then;
-                typeset -g prompt_skipper_node_version_changed=1
-                do_render=1
-            fi
-			;;
 	esac
 
 	if (( next_pending )); then
@@ -650,6 +628,22 @@ prompt_skipper_async_callback() {
 
 	[[ ${prompt_skipper_async_render_requested:-$do_render} = 1 ]] && prompt_skipper_preprompt_render
 	unset prompt_skipper_async_render_requested
+}
+
+prompt_skipper_node_version() {
+	setopt localoptions noshwordsplit
+	which nvm &>/dev/null || return
+	# [[ -f package.json ]] && print ${$(nvm current)#v} || return
+	print ${$(nvm current)#v}
+}
+
+prompt_skipper_refresh_node_version() {
+	local prev_version=$prompt_skipper_node_version
+	typeset -g prompt_skipper_node_version=$(prompt_skipper_node_version)
+	if [[ $prev_version != $prompt_skipper_node_version ]] then;
+			typeset -g prompt_skipper_node_version_changed=1
+			prompt_skipper_reset_prompt
+	fi
 }
 
 prompt_skipper_reset_prompt() {
@@ -667,12 +661,12 @@ prompt_skipper_reset_prompt() {
 }
 
 prompt_skipper_reset_prompt_symbol() {
-	prompt_skipper_state[prompt]=${SKIPPER_PROMPT_SYMBOL:--⮞}
+	prompt_skipper_state[prompt]=${SKIPPER_PROMPT_SYMBOL:--➤}
 }
 
 prompt_skipper_update_vim_prompt_widget() {
 	setopt localoptions noshwordsplit
-	prompt_skipper_state[prompt]=${${KEYMAP/vicmd/${SKIPPER_PROMPT_VICMD_SYMBOL:-⮜}}/(main|viins)/${SKIPPER_PROMPT_SYMBOL:--⮞}}
+	prompt_skipper_state[prompt]=${${KEYMAP/vicmd/${SKIPPER_PROMPT_VICMD_SYMBOL:-⮜}}/(main|viins)/${SKIPPER_PROMPT_SYMBOL:-⮞}}
 
 	prompt_skipper_reset_prompt
 }
