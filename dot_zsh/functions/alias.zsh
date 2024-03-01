@@ -13,7 +13,7 @@ greeting() {
     local myname=$(whoami)
     local f_msg=$(fortune -as)
     local msg="Hello ${myname}! \n\n ${f_msg}"
-    
+
     printf ${Green}
     echo "${msg}" | cowsay -f tux -pn
     printf ${Color_End}
@@ -28,3 +28,9 @@ is_interactive() {
 }
 
 alias get-nemo-jwt="fetch-auth0-token"
+
+# in your .bashrc/.zshrc/*rc
+alias bathelp='bat --plain --language=help'
+help() {
+  "$@" --help 2>&1 | bathelp
+}
