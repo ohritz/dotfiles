@@ -2,6 +2,8 @@ zinit snippet OMZP::kubectx
 zinit ice svn multisrc"{emoji.plugin,emoji-char-definitions}.zsh" pick"/dev/null"
 zinit snippet https://github.com/ohmyzsh/ohmyzsh/trunk/plugins/emoji
 
+zinit light zdharma-continuum/zinit-annex-bin-gem-node
+
 zinit wait lucid for \
     OMZL::git.zsh \
     OMZL::nvm.zsh \
@@ -44,7 +46,7 @@ zinit wait'1' lucid for \
 zinit wait lucid for \
     mafredri/zsh-async \
     redxtech/zsh-asdf-direnv \
-    atinit'zicompinit' atpull'zinit creinstall .' src'completions/git-forgit.zsh' wfxr/forgit \
+    atinit'zicompinit' atpull'zinit creinstall .' src'completions/_git-forgit' wfxr/forgit \
     blockf atpull'zinit creinstall  .' zsh-users/zsh-completions \
     atinit"zicompinit; zicdreplay" zdharma/fast-syntax-highlighting \
     atload'_zsh_autosuggest_start' zsh-users/zsh-autosuggestions \
@@ -59,10 +61,16 @@ zinit load zsh-users/zsh-history-substring-search
 source "${ZDOTDIR}/.kubectx-mappings"
 
 zinit ice wait"2" as"command" from"gh-r" lucid \
-    mv"zoxide*/zoxide -> zoxide" \
     atclone"./zoxide init zsh --cmd cd > init.zsh" \
     atpull"%atclone" src"init.zsh" nocompile'!'
 zinit light ajeetdsouza/zoxide
+
+zinit ice wait"3" as"program" from"gh-r" lucid \
+    sbin pick"eza"
+zinit light eza-community/eza
+
+zinit ice as"completion"
+zinit snippet https://github.com/eza-community/eza/blob/main/completions/zsh/_eza
 
 #################
 # must load theme last
