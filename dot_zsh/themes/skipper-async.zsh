@@ -1,4 +1,4 @@
-# Pure
+# Modified from Pure
 # by Sindre Sorhus
 # https://github.com/sindresorhus/pure
 # MIT License
@@ -166,7 +166,7 @@ prompt_skipper_preprompt_render() {
 		# prompt_skipper_reset_prompt
 	fi
 
-	local cleaned_ps1='└➤'
+	local cleaned_ps1=$PROMPT
 	local -H MATCH MBEGIN MEND
 	if [[ $PROMPT = *$prompt_newline* ]]; then
 		# Remove everything from the prompt until the newline. This
@@ -661,7 +661,12 @@ prompt_skipper_reset_prompt() {
 }
 
 prompt_skipper_reset_prompt_symbol() {
-	prompt_skipper_state[prompt]=${SKIPPER_PROMPT_SYMBOL:--➤}
+	if [ $? -eq 0 ]; then
+		prompt_skipper_colors[separator]=${prompt_skipper_colors[prompt:success]}
+	else
+    	prompt_skipper_colors[separator]=${prompt_skipper_colors[prompt:error]}
+	fi
+	prompt_skipper_state[prompt]=${SKIPPER_PROMPT_SYMBOL:-└▶}
 }
 
 prompt_skipper_update_vim_prompt_widget() {
@@ -731,7 +736,7 @@ prompt_skipper_state_setup() {
 	prompt_skipper_state[version]="1.0.0"
 	prompt_skipper_state+=(
 		username "$username"
-		prompt	 "${SKIPPER_PROMPT_SYMBOL:--⮞}"
+		prompt	 "${SKIPPER_PROMPT_SYMBOL:-─▶}"
 	)
 }
 
@@ -843,7 +848,7 @@ prompt_skipper_setup() {
 		path                 green
 		separator            white
 		prompt:error         red
-		prompt:success       green
+		prompt:success       white
 		prompt:continuation  242
 		suspended_jobs       red
 		user                 242
@@ -868,8 +873,11 @@ prompt_skipper_setup() {
 	# If a virtualenv is activated, display it in grey.
 	PROMPT='%(12V.%F{$prompt_skipper_colors[virtualenv]}%12v%f .)'
 
+	prompt_skipper_colors[separator]=${prompt_skipper_colors[prompt:success]}
+
 	# Prompt turns red if the previous command didn't exit with 0.
-	local prompt_indicator='%(?.%F{$prompt_skipper_colors[prompt:success]}.%F{$prompt_skipper_colors[prompt:error]})${prompt_skipper_state[prompt]}%f '
+	# local prompt_indicator='%(?.%F{$prompt_skipper_colors[prompt:success]}.%F{$prompt_skipper_colors[prompt:error]})${prompt_skipper_state[prompt]}%f '
+	local prompt_indicator='%F{$prompt_skipper_colors[separator]}${prompt_skipper_state[prompt]}%f '
 	PROMPT+=$prompt_indicator
 
 	# Indicate continuation prompt by … and use a darker color for it.
