@@ -155,16 +155,16 @@ prompt_skipper_preprompt_render() {
 	# Execution time.
 	[[ -n $prompt_skipper_cmd_exec_time ]] && preprompt_path_ctx_parts+=('%F{$prompt_skipper_colors[execution_time]}${prompt_skipper_cmd_exec_time}%f')
 
-	RPROMPT=""
+	# RPROMPT=""
 	# Node version.
-	typeset -g prompt_skipper_node_version
-	if [[ -n $prompt_skipper_node_version ]]; then
-		# preprompt_right_parts+=("%F{$prompt_skipper_colors[node:version]}${ZSH_THEME_NVM_PROMPT_PREFIX:-'[⬢'}%f")
-		# preprompt_right_parts+=('${prompt_skipper_node_version}')
-		# preprompt_right_parts+=('${ZSH_THEME_NVM_PROMPT_SUFFIX:-]}')
-		RPROMPT="[⬢${prompt_skipper_node_version}]"
-		# prompt_skipper_reset_prompt
-	fi
+	# typeset -g prompt_skipper_node_version
+	# if [[ -n $prompt_skipper_node_version ]]; then
+	# 	# preprompt_right_parts+=("%F{$prompt_skipper_colors[node:version]}${ZSH_THEME_NVM_PROMPT_PREFIX:-'[⬢'}%f")
+	# 	# preprompt_right_parts+=('${prompt_skipper_node_version}')
+	# 	# preprompt_right_parts+=('${ZSH_THEME_NVM_PROMPT_SUFFIX:-]}')
+	# 	RPROMPT="[⬢${prompt_skipper_node_version}]"
+	# 	# prompt_skipper_reset_prompt
+	# fi
 
 	local cleaned_ps1=$PROMPT
 	local -H MATCH MBEGIN MEND
@@ -200,6 +200,17 @@ prompt_skipper_preprompt_render() {
 	fi
 
 	typeset -g prompt_skipper_last_prompt=$expanded_prompt
+}
+
+prompt_check_last_exit_code() {
+  local LAST_EXIT_CODE=$?
+  if [[ $LAST_EXIT_CODE -ne 0 ]]; then
+    local EXIT_CODE_PROMPT=' '
+    EXIT_CODE_PROMPT+="%{$fg_bold[red]%}⬢%{$reset_color%}"
+    RPROMPT="$EXIT_CODE_PROMPT"
+  else
+    RPROMPT='$LAST_EXIT_CODE'
+  fi
 }
 
 prompt_skipper_precmd() {
@@ -662,14 +673,14 @@ prompt_skipper_reset_prompt() {
 
 prompt_skipper_reset_prompt_symbol() {
 
-	# Prompt turns red if the previous command didn't exit with 0.
-	if [ $? -eq 0 ]; then
-		prompt_skipper_colors[separator]=${prompt_skipper_colors[prompt:success]}
-		echo "OK"
-	else
-    	prompt_skipper_colors[separator]=${prompt_skipper_colors[prompt:error]}
-		echo "NOK"
-	fi
+	# # Prompt turns red if the previous command didn't exit with 0.
+	# if [ $? -eq 0 ]; then
+	# 	prompt_skipper_colors[separator]=${prompt_skipper_colors[prompt:success]}
+	# 	echo "OK"
+	# else
+    # 	prompt_skipper_colors[separator]=${prompt_skipper_colors[prompt:error]}
+	# 	echo "NOK"
+	# fi
 
 	prompt_skipper_state[prompt]=${SKIPPER_PROMPT_SYMBOL:-└▶}
 }
@@ -862,6 +873,7 @@ prompt_skipper_setup() {
 	)
 	prompt_skipper_colors=("${(@kv)prompt_skipper_colors_default}")
 
+	add-zsh-hook precmd prompt_check_last_exit_code
 	add-zsh-hook precmd prompt_skipper_precmd
 	add-zsh-hook preexec prompt_skipper_preexec
 
@@ -878,7 +890,7 @@ prompt_skipper_setup() {
 	# If a virtualenv is activated, display it in grey.
 	PROMPT='%(12V.%F{$prompt_skipper_colors[virtualenv]}%12v%f .)'
 
-	prompt_skipper_colors[separator]=${prompt_skipper_colors[prompt:success]}
+	# prompt_skipper_colors[separator]=${prompt_skipper_colors[prompt:success]}
 
 	local prompt_indicator='%F{$prompt_skipper_colors[separator]}${prompt_skipper_state[prompt]}%f '
 	PROMPT+=$prompt_indicator
