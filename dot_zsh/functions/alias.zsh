@@ -4,9 +4,7 @@ export Green="$fg[green]"
 export Yellow="$fg[yellow]"
 export Color_End="$reset_color"
 
-alias zshconfig="code ~/.zshrc"
-alias ohmyzsh="code ~/.oh-my-zsh"
-alias ohmycustom="code $ZSH_CUSTOM"
+alias zshconfig="code ~/.zsh"
 alias chezmoi-edit="code $HOME/.local/share/chezmoi"
 greeting() {
   if [[ is_interactive ]]; then

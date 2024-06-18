@@ -1,1 +1,7 @@
 alias ls='eza'
+zicompdef ls=eza
+# zicompdef cd=zoxide
+alias dc='docker-compose'
+# op() {
+#     op.exe "$@"
+# }

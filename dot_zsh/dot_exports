@@ -20,8 +20,6 @@ export STENA_PROJECTS_ROOT="${HOME}/data/projects/stena"
 export TM_LOCAL_DEV_PATH="${STENA_PROJECTS_ROOT}/tm-local-dev/"
 export TM_INFRASTRUCTURE_PATH="${STENA_PROJECTS_ROOT}/tm-infrastructure"
 
-export LPASS_AGENT_TIMEOUT=28800
-
 export DEFAULT_USER="sohan"
 export GPG_TTY=$(tty)
 export GPG_AGENT_INFO=${HOME}/.gnupg/S.gpg-agent:0:1
@@ -57,3 +55,4 @@ export HISTSIZE=11000
 
 export PROJECT_PATHS=(~/data/projects/stena ~/data/projects ~/data/projects/lab)
 export TM_SPEED_UP_COMPLETION=true
+export ZSH=TRUE

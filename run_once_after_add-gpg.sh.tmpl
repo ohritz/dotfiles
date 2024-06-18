@@ -1,7 +1,7 @@
 #!/bin/bash
 
 get-key() {
-    local key="{{ (index (lastpassRaw "github-gpg-key") 0).note }}"
+    local key='{{ (keeper "P5sVMnahJwYCyroiuQvzLA").notes }}'
     echo "${key}"
 }
 
@@ -10,4 +10,3 @@ add-key() {
 }
 
 add-key
-

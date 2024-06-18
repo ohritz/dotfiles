@@ -5,6 +5,9 @@ zinit snippet https://github.com/ohmyzsh/ohmyzsh/trunk/plugins/emoji
 
 zinit light zdharma-continuum/zinit-annex-bin-gem-node
 
+# compdef _gnu_generic find xargs
+zpcompdef _gnu_generic find xargs
+
 zinit wait lucid for \
     OMZL::git.zsh \
     OMZL::nvm.zsh \
@@ -57,11 +60,12 @@ zinit snippet https://github.com/eza-community/eza/blob/main/completions/zsh/_ez
 
 zinit light Aloxaf/fzf-tab
 
+# blockf ver"zinit-fixed" as"completion" nocompile mv'git-completion.zsh -> _git' iloveitaly/git-completion \
+
 zinit wait'2' lucid for \
     mafredri/zsh-async \
     redxtech/zsh-asdf-direnv \
-    felipec/git-completion \
-    atpull'zinit creinstall .' src'completions/_git-forgit' wfxr/forgit \
+    atinit'zicompinit' atpull'zinit creinstall .' wfxr/forgit \
     blockf atpull'zinit creinstall  ./src' zsh-users/zsh-completions \
     as"completion" \
     OMZP::docker-compose/_docker-compose \
@@ -70,7 +74,7 @@ zinit wait'2' lucid for \
     atload"zicompinit; zicdreplay" zdharma/fast-syntax-highlighting
 
 # must be loaded after syntax completion
-zinit wait'3' lucid for zsh-users/zsh-history-substring-search
+zinit wait lucid for zsh-users/zsh-history-substring-search
 
 source "${ZDOTDIR}/.kubectx-mappings"
 
@@ -86,5 +90,5 @@ source "${ZDOTDIR}/.kubectx-mappings"
 # zinit snippet $ZDOTDIR/themes/skipper.zsh-theme
 
 # WIP skipper async
-zinit ice wait'!' compile'(skipper-async|async).zsh' pick'async.zsh' src'skipper-async.zsh' id-as"skipper-async.zsh"
+zinit ice wait'!' compile'(decker-async|async).zsh' pick'async.zsh' src'decker-async.zsh' id-as"decker-async.zsh"
 zinit light $ZDOTDIR/themes
