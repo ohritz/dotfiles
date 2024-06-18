@@ -40,7 +40,7 @@ zinit wait'1' lucid for \
     djui/alias-tips \
     OMZP::azure
 
-zinit wait"2" lucid from"gh-r" for \
+zinit wait lucid from"gh-r" for \
     sbin"fzf" junegunn/fzf
 
 zinit ice as"command" from"gh-r" lucid \
@@ -57,9 +57,10 @@ zinit snippet https://github.com/eza-community/eza/blob/main/completions/zsh/_ez
 
 zinit light Aloxaf/fzf-tab
 
-zinit wait lucid for \
+zinit wait'2' lucid for \
     mafredri/zsh-async \
     redxtech/zsh-asdf-direnv \
+    felipec/git-completion \
     atpull'zinit creinstall .' src'completions/_git-forgit' wfxr/forgit \
     blockf atpull'zinit creinstall  ./src' zsh-users/zsh-completions \
     as"completion" \
@@ -69,8 +70,7 @@ zinit wait lucid for \
     atload"zicompinit; zicdreplay" zdharma/fast-syntax-highlighting
 
 # must be loaded after syntax completion
-zinit wait lucid for \
-    atload'_history_substring_search_config' zsh-users/zsh-history-substring-search
+zinit wait'3' lucid for zsh-users/zsh-history-substring-search
 
 source "${ZDOTDIR}/.kubectx-mappings"
 
