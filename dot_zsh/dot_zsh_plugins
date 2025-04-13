@@ -22,9 +22,9 @@ zinit wait lucid for \
     OMZP::emoji-clock \
     OMZP::git
 
-zinit wait lucid for \
-    OMZP::gpg-agent \
-    OMZP::keychain
+# zinit wait lucid for \
+#     OMZP::gpg-agent \
+#     OMZP::keychain
 
 ## load all custom functions
 for file in $(find "$ZDOTDIR/functions" -maxdepth 1 -name '*.zsh'); do

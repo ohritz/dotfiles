@@ -1,0 +1,5 @@
+[gpg "ssh"]
+  program = "/mnt/c/Users/sofe/AppData/Local/1Password/app/8/op-ssh-sign-wsl"
+
+[include]
+	path = "/mnt/c/Users/sofe/stena.gitconfig"

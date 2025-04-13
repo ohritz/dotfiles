@@ -24,6 +24,20 @@ ensure_ssh() {
   fi
 }
 
+kill_ssh_pipe() {
+  ALREADY_RUNNING=$(
+    ps -auxww | grep -q "[n]piperelay.exe -ei -s //./pipe/openssh-ssh-agent"
+    echo $?
+  )
+  if [[ $ALREADY_RUNNING != "0" ]]; then
+    echo "${Red}SSH-Agent relay is not running${Color_End}"
+  else
+    echo "${Green}Killing SSH-Agent relay...${Color_End}"
+    pkill -f "npiperelay.exe -ei -s //./pipe/openssh-ssh-agent"
+    rm $SSH_AUTH_SOCK 2>/dev/null
+  fi
+}
+
 check_ssh() {
   local result
 
