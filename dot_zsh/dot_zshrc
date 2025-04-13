@@ -7,7 +7,7 @@ HIST_STAMPS="dd.mm.yyyy"
 
 zstyle ':omz:plugins:nvm' autoload yes
 zstyle ':omz:plugins:ssh-agent' lifetime 4h
-zstyle ':omz:plugins:keychain' agents gpg,ssh
+zstyle ':omz:plugins:keychain' agents gpg
 
 # =============
 # fzf-tab config
@@ -67,7 +67,7 @@ source "${ZDOTDIR}/.aliases"
 
 # set_buildtools_ca | set_buildtools_nemo
 set_buildtools_nemo
-
+ensure_ssh
 ulimit -Sn 4096
 
 ################################################################################

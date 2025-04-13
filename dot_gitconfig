@@ -5,6 +5,7 @@
 [core]
 	editor = code --wait
 	autocrlf = input
+	sshCommand = ssh.exe
 [diff]
     tool = default-difftool
 	colorMoved = zebra
@@ -46,5 +47,9 @@
 	defaultBranch = master
 [push]
 	default = current
-[url "ssh://git@github.com/"]
-	insteadOf = https://github.com/
+# [url "ssh://git@github.com/"]
+# 	insteadOf = https://github.com/
+[includeIf "hasconfig:remote.*.url:git@github.com:stena-line-ab/*.git"]
+	path = "~/stena-wsl.gitconfig"
+[includeIf "hasconfig:remote.*.url:git@github.com:ohritz/*.git"]
+	path = "/mnt/c/Users/sofe/ohritz.gitconfig"
