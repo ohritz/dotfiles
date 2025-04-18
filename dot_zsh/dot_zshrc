@@ -58,15 +58,18 @@ source "${ZINIT_HOME}/zinit.zsh"
 source "${ZDOTDIR}/.exports"
 source "${ZDOTDIR}/.secret-exports"
 
-source "${TM_LOCAL_DEV_PATH}/aliases"
 
 ## load zinit plugins
 source "${ZDOTDIR}/.zsh_plugins"
-
 source "${ZDOTDIR}/.aliases"
 
+if grep -qs "$STENA_PROJECTS_ROOT" /proc/mounts; then
+    source "${TM_LOCAL_DEV_PATH}/aliases"
+    set_buildtools_nemo
+else
+    echo -e "\033[0;33mWarning: $STENA_PROJECTS_ROOT is not mounted\033[0m"
+fi
 # set_buildtools_ca | set_buildtools_nemo
-set_buildtools_nemo
 ensure_ssh
 ulimit -Sn 4096
 
