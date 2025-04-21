@@ -63,7 +63,7 @@ source "${ZDOTDIR}/.secret-exports"
 source "${ZDOTDIR}/.zsh_plugins"
 source "${ZDOTDIR}/.aliases"
 
-if grep -qs "$STENA_PROJECTS_ROOT" /proc/mounts; then
+if grep -qs "/home/sohan/data" /proc/mounts; then
     source "${TM_LOCAL_DEV_PATH}/aliases"
     set_buildtools_nemo
 else
