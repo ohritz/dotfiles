@@ -27,6 +27,13 @@ zinit light zdharma-continuum/zinit-annex-bin-gem-node
 # compdef _gnu_generic find xargs
 zpcompdef _gnu_generic find xargs
 
+# sed grep awk cut sort uniq tr head tail wc \
+#     basename dirname realpath readlink which whereis \
+#     ls cp mv rm mkdir rmdir touch ln chmod chown chgrp \
+#     findmnt mount umount df du free sync \
+#     ps top kill killall pgrep pkill jobs bg fg disown \
+#     history alias unalias type whence hash complete compdef compctl compinit compinit
+
 
 # zinit wait lucid for \
 #     OMZP/gpg-agent \

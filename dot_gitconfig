@@ -1,7 +1,6 @@
 [user]
 	name = Sohan Fernando
 	email = sohan@graceful.nu
-	signingkey = E4EF0EEE599153679C87191E87963E7EBD80DB89
 [core]
 	editor = code --wait
 	autocrlf = input
@@ -51,5 +50,7 @@
 # 	insteadOf = https://github.com/
 [includeIf "hasconfig:remote.*.url:git@github.com:stena-line-ab/*.git"]
 	path = "~/stena-wsl.gitconfig"
+[includeIf "hasconfig:remote.*.url:https://github.com/ohritz/*.git"]
+	path = "~/ohreo-wsl.gitconfig"
 [includeIf "hasconfig:remote.*.url:git@github.com:ohritz/*.git"]
-	path = "/mnt/c/Users/sofe/ohritz.gitconfig"
+	path = "~/ohreo-wsl.gitconfig"
