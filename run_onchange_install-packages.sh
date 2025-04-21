@@ -27,11 +27,14 @@ add_microsoft_repo() {
 
 install_packages() {
   sudo apt-get update &&
-    sudo apt-get install -y dotnet-sdk-7.0 \
-      dotnet-sdk-6.0 \
+    sudo apt-get install -y \
       gpg-agent \
+      python3 \
+      python3-pip \
+      pipx \
       python3-pygments \
       keychain \
+      socat \
       subversion
 }
 

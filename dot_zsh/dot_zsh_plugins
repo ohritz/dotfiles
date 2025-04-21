@@ -1,30 +1,36 @@
-zinit snippet OMZP::kubectx
+zinit ice lucid wait"1" cloneonly
+zinit light ohmyzsh/ohmyzsh
 
-zinit ice svn multisrc"{emoji.plugin,emoji-char-definitions}.zsh" pick"/dev/null"
-zinit snippet https://github.com/ohmyzsh/ohmyzsh/trunk/plugins/emoji
+OMZ=${ZINIT[PLUGINS_DIR]}/ohmyzsh---ohmyzsh
+OMZP=${OMZ}/plugins
+OMZL=${OMZ}/lib
+
+source $OMZP/kubectx/kubectx.plugin.zsh
+source $OMZP/emoji/emoji.plugin.zsh
+
+zinit snippet $OMZL/directories.zsh
+
+source $OMZL/git.zsh
+source $OMZL/history.zsh
+source $OMZL/spectrum.zsh
+source $OMZL/key-bindings.zsh
+source $OMZL/functions.zsh
+source $OMZL/termsupport.zsh
+
+source $OMZP/emoji-clock/emoji-clock.plugin.zsh
+
+zinit snippet $OMZP/git/git.plugin.zsh
+
 
 zinit light zdharma-continuum/zinit-annex-bin-gem-node
 
 # compdef _gnu_generic find xargs
 zpcompdef _gnu_generic find xargs
 
-zinit wait lucid for \
-    OMZL::git.zsh \
-    OMZL::nvm.zsh \
-    OMZL::directories.zsh \
-    OMZL::history.zsh \
-    OMZL::spectrum.zsh \
-    OMZL::key-bindings.zsh \
-    OMZL::functions.zsh \
-    OMZL::termsupport.zsh
-
-zinit wait lucid for \
-    OMZP::emoji-clock \
-    OMZP::git
 
 # zinit wait lucid for \
-#     OMZP::gpg-agent \
-#     OMZP::keychain
+#     OMZP/gpg-agent \
+#     OMZP/keychain
 
 ## load all custom functions
 for file in $(find "$ZDOTDIR/functions" -maxdepth 1 -name '*.zsh'); do
@@ -35,13 +41,12 @@ zinit ice atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh" n
 zinit light trapd00r/LS_COLORS
 
 zinit wait'1' lucid for \
-    OMZP::pj \
-    OMZP::nvm \
-    OMZP::sudo \
-    OMZP::magic-enter \
-    OMZP::colorize \
-    djui/alias-tips \
-    OMZP::azure
+    djui/alias-tips
+
+zinit snippet $OMZP/pj/pj.plugin.zsh
+source $OMZP/sudo/sudo.plugin.zsh
+source $OMZP/magic-enter/magic-enter.plugin.zsh
+source $OMZP/colorize/colorize.plugin.zsh
 
 zinit wait lucid from"gh-r" for \
     sbin"fzf" junegunn/fzf
@@ -62,13 +67,23 @@ zinit light Aloxaf/fzf-tab
 
 # blockf ver"zinit-fixed" as"completion" nocompile mv'git-completion.zsh -> _git' iloveitaly/git-completion \
 
+# lucid \
+#     atclone'./asdf completion zsh > _asdf' \
+#     atload'zinit creinstall _asdf'
+zi ice from"gh-r" as"program"
+zi light asdf-vm/asdf
+
+if command -v dotnet &> /dev/null; then
+    # echo "dotnet is installed"
+    . ~/.asdf/plugins/dotnet/set-dotnet-env.zsh
+fi
+
 zinit wait'2' lucid for \
     mafredri/zsh-async \
-    redxtech/zsh-asdf-direnv \
     atinit'zicompinit' atpull'zinit creinstall .' wfxr/forgit \
     blockf atpull'zinit creinstall  ./src' zsh-users/zsh-completions \
     as"completion" \
-    OMZP::docker-compose/_docker-compose \
+    $OMZP/docker-compose/_docker-compose \
     sudosubin/zsh-github-cli \
     atload'_zsh_autosuggest_start' zsh-users/zsh-autosuggestions \
     atload"zicompinit; zicdreplay" zdharma/fast-syntax-highlighting

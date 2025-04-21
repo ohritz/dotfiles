@@ -12,6 +12,8 @@ if [ -d "$HOME/.dotnet/tools" ]; then
     PATH="$HOME/.dotnet/tools:$PATH"
 fi
 
+export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
+
 export EDITOR="code"
 export SUDO_EDITOR="nano"
 export PAGER=less
