@@ -72,6 +72,7 @@ source "${ZDOTDIR}/.secret-exports"
 source "${ZDOTDIR}/.zsh_plugins"
 source "${ZDOTDIR}/.aliases"
 
+{{- if .chezmoi.config.data.iswsl }}
 if grep -qs "/home/sohan/data" /proc/mounts; then
     source "${TM_LOCAL_DEV_PATH}/aliases"
     # set_buildtools_ca | set_buildtools_nemo
@@ -80,9 +81,10 @@ else
     set_prompt_message "Warning: $STENA_PROJECTS_ROOT is not mounted"
 fi
 
-
 # ensure_ssh
 ulimit -Sn 4096
+{{- end }}
+
 
 # To customize prompt, run `p10k configure` or edit ~/.zsh/.p10k.zsh.
 [[ ! -f ~/.zsh/.p10k.zsh ]] || source ~/.zsh/.p10k.zsh

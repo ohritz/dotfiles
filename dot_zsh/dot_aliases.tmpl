@@ -2,9 +2,12 @@ alias ls='eza'
 zicompdef ls=eza
 # zicompdef cd=zoxide
 alias dc='docker compose'
+
+{{- if .chezmoi.config.data.iswsl }}
 alias ssh='ssh.exe'
 alias ssh-add='ssh-add.exe'
 alias gsed='sed'
-# op() {
-#     op.exe "$@"
-# }
+op() {
+    op.exe "$@"
+}
+{{- end}}

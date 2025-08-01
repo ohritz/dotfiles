@@ -1,13 +1,20 @@
 [data]
-{{- /* Compute a boolean “isWSL” */ -}}
-{{- $os      := .chezmoi.os -}}
+{{- $isLinux := eq .chezmoi.os "linux" -}}
 {{- $release := .chezmoi.kernel.osrelease | lower -}}
-{{- $isWSL   := and (eq $os "linux") (contains "microsoft" $release) -}}
+{{- $isWSL   := and $isLinux (contains "microsoft" $release) -}}
+{{- $isRealLinux := and $isLinux (not (contains "microsoft" $release)) -}}
+
 
 {{- if $isWSL }}
 iswsl = true
 {{- else }}
 iswsl = false
+{{- end }}
+
+{{- if $isRealLinux }}
+islinux = true
+{{- else }}
+islinux = false
 {{- end }}
 
 [git]

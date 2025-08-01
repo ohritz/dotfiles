@@ -47,11 +47,23 @@
 	defaultBranch = master
 [push]
 	default = current
+[gpg]
+  format = ssh
 # [url "ssh://git@github.com/"]
 # 	insteadOf = https://github.com/
+{{- if .chezmoi.config.data.iswsl }}
 [includeIf "hasconfig:remote.*.url:git@github.com:stena-line-ab/*.git"]
-	path = "~/stena-wsl.gitconfig"
+	path = "~/.gitconfigs/stena-wsl.gitconfig"
 [includeIf "hasconfig:remote.*.url:https://github.com/ohritz/*.git"]
-	path = "~/ohreo-wsl.gitconfig"
+	path = "~/.gitconfigs/ohreo-wsl.gitconfig"
 [includeIf "hasconfig:remote.*.url:git@github.com:ohritz/*.git"]
-	path = "~/ohreo-wsl.gitconfig"
+	path = "~/.gitconfigs/ohreo-wsl.gitconfig"
+{{- end}}
+{{- if .chezmoi.config.data.islinux }}
+[includeIf "hasconfig:remote.*.url:git@github.com:stena-line-ab/*.git"]
+	path = "~/.gitconfigs/stena-common.gitconfig"
+[includeIf "hasconfig:remote.*.url:https://github.com/ohritz/*.git"]
+	path = "~/.gitconfigs/ohreo-common.gitconfig"
+[includeIf "hasconfig:remote.*.url:git@github.com:ohritz/*.git"]
+	path = "~/.gitconfigs/ohreo-common.gitconfig"
+{{- end}}
