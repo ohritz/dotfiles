@@ -18,14 +18,13 @@ export EDITOR="code"
 export SUDO_EDITOR="nano"
 export PAGER=less
 export LESS=-R
-export STENA_PROJECTS_ROOT="${HOME}/data/projects/stena"
+export MY_DATA_DIR="${HOME}/data"
+export STENA_PROJECTS_ROOT="${MY_DATA_DIR}/projects/stena"
 export TM_LOCAL_DEV_PATH="${STENA_PROJECTS_ROOT}/tm-local-dev/"
 export TM_INFRASTRUCTURE_PATH="${STENA_PROJECTS_ROOT}/tm-infrastructure"
+export CA_INFRASTRUCTURE_PATH="${STENA_PROJECTS_ROOT}/freight-ca-infrastructure"
 
 export DEFAULT_USER="sohan"
-export GPG_TTY=$(tty)
-export GPG_AGENT_INFO=${HOME}/.gnupg/S.gpg-agent:0:1
-export NVM_DIR="${HOME}/.nvm"
 
 export DOTNET_ROOT=/usr/share/dotnet
 export PATH="$PATH:$DOTNET_ROOT:$DOTNET_ROOT/tools:$HOME/go/bin:/usr/local/go/bin:$HOME/bin:$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$BUN_INSTALL/bin"
