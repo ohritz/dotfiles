@@ -1,0 +1,14 @@
+[data]
+{{- /* Compute a boolean “isWSL” */ -}}
+{{- $os      := .chezmoi.os -}}
+{{- $release := .chezmoi.kernel.osrelease | lower -}}
+{{- $isWSL   := and (eq $os "linux") (contains "microsoft" $release) -}}
+
+{{- if $isWSL }}
+iswsl = true
+{{- else }}
+iswsl = false
+{{- end }}
+
+[git]
+command = "/usr/bin/git"
