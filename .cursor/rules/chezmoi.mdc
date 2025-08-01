@@ -1,0 +1,77 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+# Cursor Rules for Agent-Guided Coding in a chezmoi Dotfiles Repo
+
+These rules guide an AI agent (or human following the agent's prompts) when navigating, editing, and committing changes in a repository of dotfiles managed by [chezmoi](mdc:https:/www.chezmoi.io).
+
+---
+
+## 1. Repository Structure
+
+* **source directory**: This repository IS the source directory (`~/.local/share/chezmoi`).
+* **Layout**:
+
+  * `.chezmoiignore` – patterns to skip managing specific files
+  * `dot_*` directories and files – all files that map to `~/.` on your machines
+  * `private_dot_*` directories – encrypted/private files (e.g., `private_dot_gnupg/`)
+  * `run_*` scripts – chezmoi execution scripts (run_once, run_onchange)
+  * `*.tmpl` files – template files using Go template syntax
+  * `*.gitconfig` files – machine-specific git configurations
+
+## 2. File Types & Naming
+
+* **Plain files**: Use `dot_` prefix, e.g., `dot_gitconfig` maps to `~/.gitconfig`
+* **Template files**: Use `.tmpl` suffix and Go template syntax, e.g., `dot_secret-exports.tmpl`
+* **Encrypted secrets**: Store under `private_dot_*` directories
+* **Machine-specific configs**: Use descriptive names like `ohreo-wsl.gitconfig`, `stena-wsl.gitconfig`
+* **Execution scripts**:
+  * `run_once_*` – run once after adding
+  * `run_onchange_*` – run when file changes
+
+## 3. Cursor Navigation Rules
+
+1. **Always operate in the repository root** (the source directory) when editing any config.
+2. **To add a new dotfile**:
+
+   * Create the file with `dot_` prefix, e.g., `dot_vimrc` for `~/.vimrc`
+   * If templated, name `dot_vimrc.tmpl` and wrap variables in `{{}}`
+   * For private files, use `private_dot_vimrc` or `private_dot_vimrc.tmpl`
+3. **To update an existing file**:
+
+   * Edit the file directly in the repository root
+   * Apply edits, then save and stage the file with `git add`
+4. **Ignoring files**:
+
+   * For any local-only config (machine overrides, logs, caches), edit `.chezmoiignore` and append a glob rule.
+5. **Machine-specific configurations**:
+
+   * Create separate files for different machines (e.g., `ohreo-wsl.gitconfig`)
+   * Use templates with conditional logic for machine-specific settings
+
+## 4. Commit & Apply
+
+* **Staging**: After edits, always run `git status` in the repository root; stage any new/modified files.
+* **Commit message**: Use the prefix `chezmoi: ` followed by a concise description, e.g., `chezmoi: update zsh prompt`.
+* **Apply changes**: In local environments, run `chezmoi apply` to push changes into `$HOME`.
+
+## 5. Safety & Validation
+
+* **Lint templates**: Before commit, run `chezmoi doctor` to catch syntax/template errors.
+* **Dry-run**: Use `chezmoi diff` to preview applied changes before pushing to live.
+* **Prerequisites**: Ensure Keeper, Keeper Commander, and Linux Brew are installed before applying.
+
+## 6. Special Files & Directories
+
+* **`dot_zsh/`**: Contains zsh configuration files (rc, aliases, exports, plugins, themes, completions)
+* **`dot_ssh/`**: SSH configuration files
+* **`private_dot_gnupg/`**: GPG configuration (private/encrypted)
+* **`archived_functions/`**: Old functions (ignored by chezmoi)
+* **`Brewfile`**: Homebrew package definitions
+* **`dot_tool-versions`**: asdf tool version definitions
+
+---
+
+*Follow these cursor rules to maintain consistency, traceability, and safety when using an AI agent (or manual edits) in a chezmoi-managed dotfiles repository.*
