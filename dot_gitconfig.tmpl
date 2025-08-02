@@ -4,12 +4,27 @@
 [core]
 	editor = code --wait
 	autocrlf = input
-	sshCommand = ssh.exe
 [diff]
     tool = default-difftool
 	colorMoved = zebra
 [difftool "default-difftool"]
     cmd = code --wait --diff $LOCAL $REMOTE
+[push]
+	default = current
+[color]
+	ui = true
+[merge]
+	tool = code
+    conflictstyle = diff3
+[mergetool "code"]
+	cmd = code --wait --merge $REMOTE $LOCAL $BASE $MERGED
+	keeptemporaries = false
+	keepbackups = false
+	prompt = true
+	trustexitcode = false
+[grep]
+    lineNumber = true
+    patternType = perl
 [commit]
 	gpgsign = true
 [alias]
@@ -20,15 +35,14 @@
 	c = commit
 	st = status -sb
 	b = branch
-	riom = rebase -i origin/master
 	nottracked = ls-files --others
 	unstage = reset HEAD --
 	dc = diff --cached
 	fap = fetch -a -p
-	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %Cblue<%an>%Creset' --abbrev-commit --date=relative --all
-	lg1 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
-	lg2 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all
-	lg3 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)'
+	# lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %Cblue<%an>%Creset' --abbrev-commit --date=relative --all
+	lg = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
+	lgva = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all
+	lgv = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)'
 	lgh = !git --no-pager log --oneline --graph --decorate --all --color=always | head -n 15
 [rerere]
 	enabled = true
@@ -45,13 +59,15 @@
 	required = true
 [init]
 	defaultBranch = master
-[push]
-	default = current
 [gpg]
   format = ssh
+
 # [url "ssh://git@github.com/"]
 # 	insteadOf = https://github.com/
+
 {{- if .chezmoi.config.data.iswsl }}
+[include]
+	path = "~/.gitconfigs/wsl-common.gitconfig"
 [includeIf "hasconfig:remote.*.url:git@github.com:stena-line-ab/*.git"]
 	path = "~/.gitconfigs/stena-wsl.gitconfig"
 [includeIf "hasconfig:remote.*.url:https://github.com/ohritz/*.git"]
@@ -59,6 +75,7 @@
 [includeIf "hasconfig:remote.*.url:git@github.com:ohritz/*.git"]
 	path = "~/.gitconfigs/ohreo-wsl.gitconfig"
 {{- end}}
+
 {{- if .chezmoi.config.data.islinux }}
 [includeIf "hasconfig:remote.*.url:git@github.com:stena-line-ab/*.git"]
 	path = "~/.gitconfigs/stena-common.gitconfig"
@@ -66,4 +83,6 @@
 	path = "~/.gitconfigs/ohreo-common.gitconfig"
 [includeIf "hasconfig:remote.*.url:git@github.com:ohritz/*.git"]
 	path = "~/.gitconfigs/ohreo-common.gitconfig"
+[gpg "ssh"]
+    allowedSignersFile = "~/.ssh/allowed_signers"
 {{- end}}

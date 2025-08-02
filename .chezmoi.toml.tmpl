@@ -4,7 +4,6 @@
 {{- $isWSL   := and $isLinux (contains "microsoft" $release) -}}
 {{- $isRealLinux := and $isLinux (not (contains "microsoft" $release)) -}}
 
-
 {{- if $isWSL }}
 iswsl = true
 {{- else }}
@@ -15,6 +14,12 @@ iswsl = false
 islinux = true
 {{- else }}
 islinux = false
+{{- end }}
+
+{{- if $isWSL }}
+winhome = {{ index (index (keeper "Gg8xsVI4FyDzaUej-ZnOsQ").fields 0).value 0 | quote }}
+{{- else }}
+winhome = ""
 {{- end }}
 
 [git]
