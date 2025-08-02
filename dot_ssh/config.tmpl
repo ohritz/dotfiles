@@ -1,0 +1,33 @@
+{{- if .chezmoi.config.data.islinux }}
+Host kodibox
+  HostName kodibox
+  User osmc
+
+Host personalgit
+	HostName github.com
+	User git
+	IdentityFile ~/.ssh/personal_git.pub
+	IdentitiesOnly yes
+
+Host vs-ssh.visualstudio.com
+	HostName vs-ssh.visualstudio.com
+	User stenait
+	IdentityFile ~/.ssh/stena_ado.pub
+	IdentitiesOnly yes
+	Port 443
+
+# Work GitHub
+Host github.com
+	# HostName ssh.github.com
+	User git
+	IdentityFile ~/.ssh/stena_git.pub
+	IdentitiesOnly yes
+    # Port 443
+
+Host 10.243.*.*
+	User ubuntu
+	IdentityFile ~/.ssh/ca-buildkite-agent-cli.pub
+	IdentityFile ~/.ssh/tm-buildkite-agent-cli.pub
+	IdentitiesOnly yes
+
+{{- end}}
