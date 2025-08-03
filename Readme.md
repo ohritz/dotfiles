@@ -14,7 +14,10 @@ Install the following before applying with chezmoi
 
 Login to Keeper Commander and set up a Persistent Login for at least the time period you need to apply the chezmoi config.
 
-There is an WIP in the script file `prep_before_install.sh` to enable a curl | bash for prereqs..
+run
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohritz/HEAD/setup.sh)"
+```
 
 
 
