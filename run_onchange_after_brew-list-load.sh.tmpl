@@ -1,9 +1,20 @@
 #!/bin/bash
 
-# Brewfile hash: {{ include "Brewfile.tmpl" | sha256sum }}
+# Brewfile hash: {{ include "Brewfile" | sha256sum }}
 brew update && brew upgrade
 brew bundle -v || (echo "Brewfile failed, exiting early" && exit 1)
 brew cleanup
 if brew list | grep node; then
     brew uninstall --ignore-dependencies node
+fi
+
+if command -v asdf >/dev/null 2>&1; then
+    asdf plugin list | grep -q nodejs || asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
+    asdf plugin list | grep -q dotnet || asdf plugin add dotnet https://github.com/hensou/asdf-dotnet.git
+    if ! asdf list nodejs | grep -q "v22.17.0"; then
+        asdf install nodejs v22.17.0
+    fi
+    if ! asdf list dotnet | grep -q "8.0.408"; then
+        asdf install dotnet 8.0.408
+    fi
 fi

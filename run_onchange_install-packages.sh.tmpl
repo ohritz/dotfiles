@@ -37,7 +37,10 @@ install_packages() {
       build-essential \
       procps \
       curl \
-      file
+      file \
+      dirmngr \
+      gpg \
+      gawk
 
   {{- if .chezmoi.config.data.iswsl }}
     sudo apt-get install -y \

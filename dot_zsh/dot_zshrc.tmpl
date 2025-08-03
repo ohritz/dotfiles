@@ -1,0 +1,78 @@
+# use this for profiling in case the shell becomes slow
+export PROFILING_MODE=0
+if [ $PROFILING_MODE -ne 0 ]; then
+    zmodload zsh/zprof
+fi
+source "${ZDOTDIR}/tools/set_logging.zsh"
+
+zsh_start_time=$(date +%s.%N)
+
+source "${ZDOTDIR}/configs"
+
+[ ! -d $ZCOMET_HOME ] && mkdir -p "$(dirname $ZCOMET_HOME)"
+[ ! -d "${ZCOMET_HOME}/bin/.git" ] && command git clone https://github.com/agkozak/zcomet.git "${ZCOMET_HOME}/bin"
+source "${ZCOMET_HOME}/bin/zcomet.zsh"
+
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zsh/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+zcomet snippet "${ZDOTDIR}/evals/homebrew.zsh"
+
+source "${ZDOTDIR}/exports"
+source "${ZDOTDIR}/.secret-exports"
+
+typeset -U fpath
+
+
+{{- if .chezmoi.config.data.iswsl }}
+if grep -qs "/home/sohan/data" /proc/mounts; then
+    source "${TM_LOCAL_DEV_PATH}/aliases"
+    # set_buildtools_ca | set_buildtools_nemo
+    # set_buildtools_nemo
+    fpath=(
+    "${TM_LOCAL_DEV_PATH}completions"
+    "${fpath[@]}"
+)
+else
+    set_prompt_message "Warning: $STENA_PROJECTS_ROOT is not mounted"
+fi
+
+# ensure_ssh
+ulimit -Sn 4096
+{{- end }}
+
+fpath=(
+    "${ZDOTDIR}/functions/"
+    "${ZDOTDIR}/completions/"
+    "${fpath[@]}"
+)
+
+## load zinit plugins
+source "${ZDOTDIR}/plugins"
+source "${ZDOTDIR}/aliases"
+
+if command -v dotnet &> /dev/null; then
+    # echo "dotnet is installed"
+    . ~/.asdf/plugins/dotnet/set-dotnet-env.zsh
+fi
+
+zcomet load romkatv/powerlevel10k
+
+# To customize prompt, run `p10k configure` or edit ~/.zsh/.p10k.zsh.
+[[ ! -f ~/.zsh/.p10k.zsh ]] || source ~/.zsh/.p10k.zsh
+
+source "${ZDOTDIR}/prompt_config"
+
+################################################################################
+if [ $PROFILING_MODE -ne 0 ]; then
+    # zprof | awk 'NR==1 || NR==2 || $5+0 > 0.01 {print}' | sort -rk5 | head -n 20 >~/zsh_profile.log
+    zprof >~/zsh_profile.log
+fi
+
+zsh_end_time=$(date +%s.%N)
+zsh_init_duration=$(((zsh_end_time - zsh_start_time) * 1000))
+set_prompt_message "Shell init time: ${zsh_init_duration%.*} ms"

@@ -3,3 +3,4 @@ Readme.md
 prep_before_install.sh
 run_once_after_add-gpg.sh.tmpl
 .cursor
+setup.sh

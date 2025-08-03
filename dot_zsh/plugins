@@ -1,0 +1,45 @@
+zcomet load ohmyzsh lib directories.zsh history.zsh key-bindings.zsh functions.zsh
+zcomet load amyreese/zsh-titles
+zcomet load ohmyzsh plugins/git
+zcomet load ohmyzsh plugins/eza
+
+compdef _gnu_generic find xargs
+# sed grep awk cut sort uniq tr head tail wc \
+#     basename dirname realpath readlink which whereis \
+#     ls cp mv rm mkdir rmdir touch ln chmod chown chgrp \
+#     findmnt mount umount df du free sync \
+#     ps top kill killall pgrep pkill jobs bg fg disown \
+#     history alias unalias type whence hash complete compdef compctl compinit compinit
+
+source "${ZDOTDIR}/load_functions.zsh"
+
+source "${ZDOTDIR}/lscolors/lscolors.sh"
+
+zcomet load djui/alias-tips
+
+zcomet load ohmyzsh plugins/pj
+zcomet load ohmyzsh plugins/sudo
+zcomet load ohmyzsh plugins/colorize
+
+zcomet snippet "${ZDOTDIR}/evals/fzf.zsh"
+
+export _ZO_DATA_DIR="${HOME}/.local/share/zoxide"
+
+zcomet snippet "${ZDOTDIR}/evals/zoxide.zsh"
+
+# zcomet load wfxr/forgit
+# PATH="${~[forgit]}/bin:$PATH"
+# zcomet load zsh-users/zsh-completions
+zcomet fpath zsh-users/zsh-completions src
+zcomet fpath eza-community/eza
+
+zcomet load sudosubin/zsh-github-cli
+
+zcomet load Aloxaf/fzf-tab
+# It is good to load these popular plugins last, and in this order:
+zcomet load zdharma/fast-syntax-highlighting
+zcomet load zsh-users/zsh-autosuggestions
+zcomet load zsh-users/zsh-history-substring-search
+
+# Run compinit and compile its cache
+zcomet compinit

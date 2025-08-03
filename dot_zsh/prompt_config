@@ -1,0 +1,13 @@
+# KUBECONTEXT configuration - must be AFTER .p10k.zsh is sourced to avoid being unset
+typeset -g POWERLEVEL9K_KUBECONTEXT_CLASSES=(
+    '*dev*'  dev
+    '*qa*'  qa
+    '*prod*' prod
+)
+typeset -g POWERLEVEL9K_KUBECONTEXT_PROD_BACKGROUND=red
+typeset -g POWERLEVEL9K_KUBECONTEXT_QA_BACKGROUND=yellow
+typeset -g POWERLEVEL9K_KUBECONTEXT_DEV_BACKGROUND=green
+
+typeset -g POWERLEVEL9K_KUBECONTEXT_PROD_FOREGROUND=black
+typeset -g POWERLEVEL9K_KUBECONTEXT_QA_FOREGROUND=black
+typeset -g POWERLEVEL9K_KUBECONTEXT_DEV_FOREGROUND=black
