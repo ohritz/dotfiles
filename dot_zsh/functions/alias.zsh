@@ -25,8 +25,6 @@ is_interactive() {
   return 1
 }
 
-alias get-nemo-jwt="fetch-auth0-token"
-
 # in your .bashrc/.zshrc/*rc
 alias bathelp='bat --plain --language=help'
 help() {

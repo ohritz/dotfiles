@@ -1,0 +1,5 @@
+{{- if .chezmoi.config.data.iswsl }}
+#!/usr/bin/env bash
+
+op.exe "$@"
+{{- end}}

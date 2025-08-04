@@ -1,4 +1,3 @@
-{{- if .chezmoi.config.data.islinux }}
 Host kodibox
   HostName kodibox
   User osmc
@@ -29,5 +28,3 @@ Host 10.243.*.*
 	IdentityFile ~/.ssh/ca-buildkite-agent-cli.pub
 	IdentityFile ~/.ssh/tm-buildkite-agent-cli.pub
 	IdentitiesOnly yes
-
-{{- end}}
