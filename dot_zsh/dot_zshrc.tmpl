@@ -67,6 +67,9 @@ zcomet load romkatv/powerlevel10k
 
 source "${ZDOTDIR}/prompt_config"
 
+# Run compinit and compile its cache
+zcomet compinit
+
 ################################################################################
 if [ $PROFILING_MODE -ne 0 ]; then
     # zprof | awk 'NR==1 || NR==2 || $5+0 > 0.01 {print}' | sort -rk5 | head -n 20 >~/zsh_profile.log

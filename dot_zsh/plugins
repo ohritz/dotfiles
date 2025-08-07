@@ -20,6 +20,7 @@ zcomet load djui/alias-tips
 zcomet load ohmyzsh plugins/pj
 zcomet load ohmyzsh plugins/sudo
 zcomet load ohmyzsh plugins/colorize
+zcomet load z-shell/zsh-navigation-tools
 
 zcomet snippet "${ZDOTDIR}/evals/fzf.zsh"
 
@@ -40,6 +41,3 @@ zcomet load Aloxaf/fzf-tab
 zcomet load zdharma/fast-syntax-highlighting
 zcomet load zsh-users/zsh-autosuggestions
 zcomet load zsh-users/zsh-history-substring-search
-
-# Run compinit and compile its cache
-zcomet compinit

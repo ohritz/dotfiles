@@ -1,5 +1,15 @@
 alias ls='eza'
-compdef ls=eza
-compdef cd=zoxide
+# compdef ls=eza
+# compdef cd=zoxide
 alias dc='docker compose'
 alias gsed='sed'
+compdef kubecolor=kubectl
+alias kubectl=kubecolor
+alias oc="kubecolor"
+export KUBECOLOR_KUBECTL="oc"
+
+alias d='docker'
+compdef d=docker
+alias dc='docker compose'
+
+

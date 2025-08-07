@@ -42,7 +42,10 @@ install_packages() {
       file \
       dirmngr \
       gpg \
-      gawk
+      gawk \
+      fd-find
+
+  ln -s $(which fdfind) ~/.local/bin/fd
 
   {{- if .chezmoi.config.data.iswsl }}
     sudo apt-get install -y \
