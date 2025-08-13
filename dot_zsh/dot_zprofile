@@ -1,0 +1,31 @@
+#!/usr/bin/env zsh
+
+# XDG base directories (defaults if not set)
+export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
+export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
+export XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
+
+# Environment for tools that should be available to all descendants
+export DOTNET_ROOT=/usr/share/dotnet
+
+# PATH setup for login shells (unique entries)
+typeset -U path
+path=(
+    "$HOME/bin"
+    "$HOME/.local/bin"
+    "$HOME/.dotnet/tools"
+    "${ASDF_DATA_DIR:-$HOME/.asdf}/shims"
+    "$HOME/go/bin"
+    "/usr/local/go/bin"
+    "$HOME/.yarn/bin"
+    "$HOME/.config/yarn/global/node_modules/.bin"
+    "$BUN_INSTALL/bin"
+    $path
+)
+
+# Core editors/pagers for login shells
+export EDITOR="code"
+export SUDO_EDITOR="nano"
+export PAGER=less
+export LESS=-R

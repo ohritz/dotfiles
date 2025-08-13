@@ -1,17 +1,16 @@
-###
-# find "$ZDOTDIR/functions" -maxdepth 1 -name '*.zsh'
-###
+# Load multi-function files via source (since they contain multiple functions)
+# These files contain multiple functions, so autoload isn't appropriate
 
-zcomet snippet "${ZDOTDIR}/functions/ssl_tools.zsh"
-zcomet snippet "${ZDOTDIR}/functions/alias.zsh"
-zcomet snippet "${ZDOTDIR}/functions/ssh_tools.zsh"
-zcomet snippet "${ZDOTDIR}/functions/chatGPT.zsh"
-zcomet snippet "${ZDOTDIR}/functions/mitmproxy_helper.zsh"
-zcomet snippet "${ZDOTDIR}/functions/git.zsh"
-zcomet snippet "${ZDOTDIR}/functions/kubectl_helpers.zsh"
-zcomet snippet "${ZDOTDIR}/functions/prompt_messages.zsh"
-zcomet snippet "${ZDOTDIR}/functions/spinner.zsh"
-zcomet snippet "${ZDOTDIR}/functions/build_tools.zsh"
-zcomet snippet "${ZDOTDIR}/functions/stena_docker.zsh"
-zcomet snippet "${ZDOTDIR}/functions/utils.zsh"
-zcomet snippet "${ZDOTDIR}/functions/aws_tools.zsh"
+source "${ZDOTDIR}/functions/ssl_tools.zsh"
+source "${ZDOTDIR}/functions/alias.zsh"
+source "${ZDOTDIR}/functions/ssh_tools.zsh"
+source "${ZDOTDIR}/functions/chatGPT.zsh"
+source "${ZDOTDIR}/functions/mitmproxy_helper.zsh"
+source "${ZDOTDIR}/functions/git.zsh"
+source "${ZDOTDIR}/functions/kubectl_helpers.zsh"
+source "${ZDOTDIR}/functions/prompt_messages.zsh"
+source "${ZDOTDIR}/functions/spinner.zsh"
+source "${ZDOTDIR}/functions/build_tools.zsh"
+source "${ZDOTDIR}/functions/stena_docker.zsh"
+source "${ZDOTDIR}/functions/utils.zsh"
+source "${ZDOTDIR}/functions/aws_tools.zsh"

@@ -1,23 +1,4 @@
-typeset -U path # -U ensures unique entries (no duplicates)
-export DOTNET_ROOT=/usr/share/dotnet
 
-path=(
-    "$HOME/bin"
-    "$HOME/.local/bin"
-    "$HOME/.dotnet/tools"
-    "${ASDF_DATA_DIR:-$HOME/.asdf}/shims"
-    "$HOME/go/bin"
-    "/usr/local/go/bin"
-    "$HOME/.yarn/bin"
-    "$HOME/.config/yarn/global/node_modules/.bin"
-    "$BUN_INSTALL/bin"
-    $path
-)
-
-export EDITOR="code"
-export SUDO_EDITOR="nano"
-export PAGER=less
-export LESS=-R
 export MY_DATA_DIR="${HOME}/data"
 export STENA_PROJECTS_ROOT="${MY_DATA_DIR}/projects/stena"
 export TM_LOCAL_DEV_PATH="${STENA_PROJECTS_ROOT}/tm-local-dev/"
