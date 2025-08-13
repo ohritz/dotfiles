@@ -1,0 +1,19 @@
+# WSL function: Start vpnkit
+# Dependencies: vpnkit.exe
+# Purpose: Start the vpnkit process
+# Usage: vpnkit
+
+vpnkit() {
+    WIN_PIPE_PATH=$(echo $PIPE_PATH | sed -e "s:/:\\\:g")
+    CMD='"$VPNKIT_PATH" \
+        --ethernet $WIN_PIPE_PATH \
+        --gateway-ip $VPNKIT_GATEWAY_IP \
+        --host-ip $VPNKIT_HOST_IP \
+        --lowest-ip $VPNKIT_LOWEST_IP \
+        --highest-ip $VPNKIT_HIGHEST_IP \
+    '
+    if [ "$VPNKIT_DEBUG" ]; then
+        CMD="$CMD"' --debug'
+    fi
+    eval "$CMD"
+}

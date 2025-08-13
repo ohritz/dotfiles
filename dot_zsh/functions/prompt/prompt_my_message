@@ -1,0 +1,28 @@
+# Prompt function: Display prompt messages
+# Dependencies: p10k
+# Purpose: Display queued prompt messages as Powerlevel10k segments
+# Global State: Uses and clears OHR_PROMPT_MESSAGE array
+# Usage: Called by prompt system
+# IMPORTANT: Must be named WITHOUT underscore prefix for Powerlevel10k recognition
+
+prompt_my_message() {
+  declare -g -a OHR_PROMPT_MESSAGE
+
+  local _fg _level _message
+
+  for entry in "${OHR_PROMPT_MESSAGE[@]}"; do
+    _level="${entry%%:*}"
+    _message="${entry#*:}"
+
+    case "$_level" in
+      info)  _fg=blue ;;
+      warn)  _fg=yellow ;;
+      error) _fg=red ;;
+      *)     _fg=magenta ;;
+    esac
+
+    p10k segment -c 0 -e -t "$_message" -f "$_fg"
+  done
+
+  OHR_PROMPT_MESSAGE=()
+}

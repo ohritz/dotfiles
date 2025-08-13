@@ -1,0 +1,8 @@
+# Utility function: Convert Unix milliseconds to date
+# Dependencies: date
+# Purpose: Convert Unix timestamp in milliseconds to readable date
+# Usage: date-from-unix-ms <timestamp_ms>
+
+date-from-unix-ms() {
+    echo $(date -d @$((($1 + 500) / 1000)))
+}

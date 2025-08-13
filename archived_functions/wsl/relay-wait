@@ -1,0 +1,12 @@
+# WSL function: Wait for relay socket
+# Dependencies: None
+# Purpose: Wait for the relay socket to be available
+# Usage: relay-wait
+
+relay-wait() {
+    echo "waiting for $SOCKET_PATH ..."
+    while [ ! -S "$SOCKET_PATH" ]; do
+        sleep 0.1
+    done
+    echo "found $SOCKET_PATH"
+}

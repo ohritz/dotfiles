@@ -1,0 +1,71 @@
+# SSH function: Ensure SSH relay is running
+# Dependencies: socat, npiperelay.exe
+# Purpose: Start and maintain SSH agent relay for WSL
+# Global State: Sets OHR_SSH_RELAY_STATUS and SSH_AUTH_SOCK
+# Usage: _ensure-ssh [debug]
+
+_ensure-ssh() {
+  declare -g OHR_SSH_RELAY_STATUS
+  export SSH_AUTH_SOCK=$HOME/.ssh/agent.sock
+
+  local npiperelay_cmd="npiperelay.exe -ei -s //./pipe/openssh-ssh-agent"
+  local relay_running=0
+  local debug_enabled=false
+
+  [[ "$1" == "debug" ]] && debug_enabled=true
+
+  $debug_enabled && echo "[ensure_ssh] Checking for existing relay process..."
+
+  if pgrep -f "$npiperelay_cmd" >/dev/null 2>&1; then
+    relay_running=1
+    $debug_enabled && echo "[ensure_ssh] Relay process is running."
+  else
+    $debug_enabled && echo "[ensure_ssh] Relay process is NOT running."
+  fi
+
+  if [[ $relay_running -eq 1 ]]; then
+    $debug_enabled && echo "[ensure_ssh] Verifying SSH agent relay..."
+
+    local ssh_output
+    ssh_output=$(ssh -T git@github.com 2>&1)
+    local ssh_exit=$?
+
+    $debug_enabled && echo "[ensure_ssh] ssh exit code: $ssh_exit"
+    $debug_enabled && echo "[ensure_ssh] ssh output: $ssh_output"
+
+    if [[ $ssh_exit == 1 && "$ssh_output" == *"successfully authenticated"* ]]; then
+      OHR_SSH_RELAY_STATUS="OK"
+      $debug_enabled && echo "[ensure_ssh] SSH relay is working."
+      return
+    else
+      OHR_SSH_RELAY_STATUS="RESTARTING"
+      $debug_enabled && echo "[ensure_ssh] SSH relay not working. Restarting..."
+      pkill -f "$npiperelay_cmd"
+      rm -f $SSH_AUTH_SOCK
+    fi
+  else
+    OHR_SSH_RELAY_STATUS="STARTING"
+    $debug_enabled && echo "[ensure_ssh] Starting SSH relay..."
+    rm -f $SSH_AUTH_SOCK
+  fi
+
+  (setsid socat UNIX-LISTEN:$SSH_AUTH_SOCK,fork EXEC:"$npiperelay_cmd",nofork &) >/dev/null 2>&1
+  sleep 0.2
+
+  $debug_enabled && echo "[ensure_ssh] Relay process started. Verifying again..."
+
+  local ssh_output
+  ssh_output=$(ssh -T git@github.com 2>&1)
+  local ssh_exit=$?
+
+  $debug_enabled && echo "[ensure_ssh] ssh exit code: $ssh_exit"
+  $debug_enabled && echo "[ensure_ssh] ssh output: $ssh_output"
+
+  if [[ $ssh_exit == 1 && "$ssh_output" == *"successfully authenticated"* ]]; then
+    OHR_SSH_RELAY_STATUS="OK"
+    $debug_enabled && echo "[ensure_ssh] SSH relay is now working."
+  else
+    OHR_SSH_RELAY_STATUS="FAILED"
+    $debug_enabled && echo "[ensure_ssh] SSH relay failed to authenticate."
+  fi
+}

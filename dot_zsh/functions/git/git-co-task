@@ -1,0 +1,10 @@
+# Git function: Checkout branch by task ID
+# Dependencies: git, sed, awk
+# Purpose: Find and checkout a branch containing the specified task ID
+# Usage: _git-co-task <task_id>
+
+git-co-task() {
+    local taskId="${1:?'Usage: call with task no as first arg.'}"
+    local branch="$(git branch -r | grep $taskId | sed -e 's/origin\///' | awk '{$1=$1};1')"
+    git co $branch
+}

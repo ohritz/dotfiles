@@ -1,0 +1,29 @@
+# Build tools function: Add directory to PATH
+# Dependencies: None
+# Purpose: Helper function to add directories to PATH with deduplication
+# Global State: Modifies PATH
+# Usage: _add-to-path <path> [position]
+# Position: "prepend" (default) or "append"
+
+_add-to-path() {
+  local path_to_add="$1"
+  local position="${2:-prepend}"  # prepend or append
+
+  if [[ ! -d "$path_to_add" ]]; then
+    echo "Error: Directory not found: $path_to_add" >&2
+    return 1
+  fi
+
+  # Remove if already present (avoid duplicates)
+  PATH="${PATH//:$path_to_add:/:}"
+  PATH="${PATH//:$path_to_add/}"
+  PATH="${PATH//$path_to_add:/}"
+  PATH="${PATH//$path_to_add/}"
+
+  # Add in specified position
+  if [[ "$position" == "prepend" ]]; then
+    export PATH="$path_to_add:$PATH"
+  else
+    export PATH="$PATH:$path_to_add"
+  fi
+}

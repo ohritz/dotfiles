@@ -1,0 +1,8 @@
+# WSL function: Start relay
+# Dependencies: socat, npiperelay.exe
+# Purpose: Start the relay process for vpnkit
+# Usage: relay
+
+relay() {
+    socat UNIX-LISTEN:$SOCKET_PATH,fork,umask=007 EXEC:"$NPIPERELAY_PATH -ep -s $PIPE_PATH",nofork
+}

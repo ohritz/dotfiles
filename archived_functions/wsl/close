@@ -1,0 +1,17 @@
+# WSL function: Cleanup vpnkit
+# Dependencies: iptables, ip, kill
+# Purpose: Clean up vpnkit configuration and processes
+# Usage: close
+
+close() {
+    if [ "$USE_IPTABLES" ]; then
+        iptables -t nat -S | grep $VPNKIT_GATEWAY_IP | cut -d " " -f 2- | tr '\n' '\0' | xargs -0 -r -n 1 sh -c 'iptables -t nat -D $1' argv0
+        iptables -t nat -S | grep $TAP_NAME | cut -d " " -f 2- | tr '\n' '\0' | xargs -0 -r -n 1 sh -c 'iptables -t nat -D $1' argv0
+    fi
+
+    ip link set dev $TAP_NAME down
+    ip route add default via $WSL2_GATEWAY_IP dev eth0
+
+    echo "stopped wsl-vpnkit"
+    kill 0
+}

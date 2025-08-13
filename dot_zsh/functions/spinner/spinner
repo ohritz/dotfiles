@@ -1,0 +1,9 @@
+# Spinner function: Show spinner for process
+# Dependencies: _spinner
+# Purpose: Display a spinner while a process is running
+# Usage: spinner <pid>
+
+spinner() {
+  local pid=$1
+  _spinner $pid
+}

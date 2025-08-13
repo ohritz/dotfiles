@@ -1,0 +1,34 @@
+# Git function: Remove git worktree
+# Dependencies: git, fzf
+# Purpose: Remove a git worktree with interactive selection
+# Usage: _git-worktree-rm
+
+git-worktree-rm() {
+    [ ! git_is_git_repo ] && return 0
+    local -a worktree_array
+    worktree_array=(${(f)"$(git worktree list)"})
+
+    ## if there is only one in the list there are no worktree copies so exit
+    if [[ ${#worktree_array[@]} -eq 1 ]]; then
+        echo "No worktree copies found"
+        return 0
+    fi
+
+    ## remove the first line from the worktrees as it is the original repo
+    local worktrees=$(printf '%s\n' "${worktree_array[@]:1}")
+    local worktree_dir=$(_select-worktree "$worktrees" | awk '{print $1}')
+
+    # if the selections is empty exit
+    if [[ -z "$worktree_dir" ]]; then
+        echo "No worktree selected"
+        return 0
+    fi
+
+    echo "Removing $worktree_dir"
+    echo "Are you sure? (y/n)"
+    read -q
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        git worktree remove $worktree_dir
+        rm -rf $worktree_dir
+    fi
+}

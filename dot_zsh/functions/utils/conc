@@ -1,0 +1,9 @@
+# Utility function: Run command concurrently
+# Dependencies: seq, xargs
+# Purpose: Run a command multiple times in parallel
+# Usage: conc <count> <parallel_count> <command...>
+
+conc() {
+    cmd=("${@:3}")
+    seq 1 "$1" | xargs -I'$XARGI' -P"$2" "${cmd[@]}"
+}

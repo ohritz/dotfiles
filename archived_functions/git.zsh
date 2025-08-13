@@ -1,4 +1,3 @@
-
 git-remote:gone:ls() {
     git fetch --all -p; git branch -vv | grep ": gone]" | awk '{ print $1 }'
 }
@@ -8,34 +7,12 @@ git-remote:gone:rm() {
     local branches=$(git fetch --all -p -q; git branch -vv | grep ": gone]" | awk '{ print $1 }')
     echo "${branches[*]}"
     echo "${Green}Cleaning branches.${Color_End} use -f if there are unmerged to remove."
-    if [[ -z "$isForce" ]] then;
+    if [[ -z "$isForce" ]]; then
         echo $branches[@] | xargs -r -n 1 git branch -d
     else
         echo "${Red}forced, unmerged branches will be removed${Color_End}"
         echo $branches[@] | xargs -r -n 1 git branch -D
     fi
-}
-
-git-new-feature() {
-    local taskId="${1:?'Usage: call with task no as first arg.'}"
-    local desc="${2:?'Usage: call with description as second arg.'}"
-    # desc is cleaned ([/] and [space] are replaced with -) ([.], ["] and ['] are replace with nothing) and all to lower.
-    desc="$(echo $desc | sed 's/[\/| ]/-/g' | sed 's/[\.|\"|\x27]//g' | tr '[:upper:]' '[:lower:]')"
-    local branchname="feature/${taskId}-${desc}"
-    echo "creating new branch $branchname from master"
-    git fetch -a
-    git co -b $branchname origin/master
-    # git push --set-upstream origin $branchname
-}
-
-git-task-feature() {
-    local taskId="${1:?'Usage: call with task no as first arg.'}"
-    echo "logging in to az devops"
-    login_az_devops
-
-    local pbiTitle="$(get_board_item_title $taskId)"
-    echo "Title of task $taskId is $pbiTitle"
-    git-new-feature $taskId $pbiTitle
 }
 
 git-co-task() {
@@ -44,26 +21,97 @@ git-co-task() {
     git co $branch
 }
 
-git-create-pr() {
-    local taskId="${1:?'Usage: call with task no as first arg.'}"
-    local body="${2:-""}"
-    echo "logging in to az devops"
-    login_az_devops
-    local pbiTitle=$(get_board_item_title $taskId)
-    echo "Title of task $taskId is $pbiTitle"
-
-    local prTitle="Task $taskId: $pbiTitle (AB#$taskId)"
-    gh pr create --title $prTitle --fill
+git-worktree:add() {
+    local branch="${1:?'Usage: call with branch name as first arg.'}"
+    [ ! git_is_git_repo ] && return 0
+    local repo_dir=$(git rev-parse --show-toplevel)
+    local parent_dir=$(dirname $repo_dir)
+    local dir_name=$(basename $repo_dir)
+    local worktree_dir="$parent_dir/$dir_name-$branch"
+    git worktree add $worktree_dir $branch
 }
 
-git-create-pr-draft() {
-    local taskId="${1:?'Usage: call with task no as first arg.'}"
-    local body="${2:-""}"
-    echo "logging in to az devops"
-    login_az_devops
-    local pbiTitle="$(get_board_item_title $taskId)"
-    echo "Title of task $taskId is $pbiTitle"
+git-worktree:rm() {
+    [ ! git_is_git_repo ] && return 0
+    local -a worktree_array
+    worktree_array=(${(f)"$(git worktree list)"})
 
-    local prTitle="Task $taskId: $pbiTitle (AB#$taskId)"
-    gh pr create -d --title $prTitle --fill
+    ## if there is only one in the list there are no worktree copies so exit
+    if [[ ${#worktree_array[@]} -eq 1 ]]; then
+        echo "No worktree copies found"
+        return 0
+    fi
+
+    ## remove the first line from the worktrees as it is the original repo
+    local worktrees=$(printf '%s\n' "${worktree_array[@]:1}")
+    local worktree_dir=$(_select_worktree "$worktrees" | awk '{print $1}')
+
+    # if the selections is empty exit
+    if [[ -z "$worktree_dir" ]]; then
+        echo "No worktree selected"
+        return 0
+    fi
+
+    echo "Removing $worktree_dir"
+    echo "Are you sure? (y/n)"
+    read -q
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        git worktree remove $worktree_dir
+        rm -rf $worktree_dir
+    fi
+}
+
+git-worktree:cd() {
+    [ ! git_is_git_repo ] && return 0
+    local current_dir=$(pwd)
+    local -a worktree_array
+    worktree_array=(${(f)"$(git worktree list)"})
+
+    ## if there is only one in the list there are no worktree copies so exit
+    if [[ ${#worktree_array[@]} -eq 1 ]]; then
+        echo "No worktree copies found"
+        return 0
+    fi
+
+    ## if there are only two in the list and we are on the first one we go to the second if we are on the second we go to the first
+    if [[ ${#worktree_array[@]} -eq 2 ]]; then
+        local first_dir=$(echo "${worktree_array[0]}" | awk '{print $1}')
+        local second_dir=$(echo "${worktree_array[1]}" | awk '{print $1}')
+
+        if [[ "$current_dir" == "$first_dir" ]]; then
+            cd "$second_dir"
+            return 0
+        elif [[ "$current_dir" == "$second_dir" ]]; then
+            cd "$first_dir"
+            return 0
+        fi
+    fi
+
+    ## remove the entry that matches the current directory from the worktree list, but do not always remove the first item
+    local worktrees=$(printf '%s\n' "${worktree_array[@]}" | awk -v cur="$current_dir" '$1 != cur')
+
+    local worktree_dir=$(_select_worktree "$worktrees" | awk '{print $1}')
+
+    # if the selections is empty exit
+    if [[ -z "$worktree_dir" ]]; then
+        echo "No worktree selected"
+        return 0
+    fi
+
+    cd $worktree_dir
+}
+
+_select_worktree() {
+    local worktrees=${1}
+
+        {
+        echo "$worktrees" | awk '{
+            path=$1;
+            commit=$2;
+            branch="";
+            for (i=3; i<=NF; ++i) branch=branch $i " ";
+            gsub(/^\[|\]$/, "", branch);  # Remove [ and ] from branch name
+            print path "\t" commit "\t" branch
+        }'
+    } | column -t | fzf --ansi
 }

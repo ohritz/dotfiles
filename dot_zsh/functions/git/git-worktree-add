@@ -1,0 +1,14 @@
+# Git function: Add git worktree
+# Dependencies: git
+# Purpose: Create a new worktree for the specified branch
+# Usage: _git-worktree-add <branch_name>
+
+git-worktree-add() {
+    local branch="${1:?'Usage: call with branch name as first arg.'}"
+    [ ! git_is_git_repo ] && return 0
+    local repo_dir=$(git rev-parse --show-toplevel)
+    local parent_dir=$(dirname $repo_dir)
+    local dir_name=$(basename $repo_dir)
+    local worktree_dir="$parent_dir/$dir_name-$branch"
+    git worktree add $worktree_dir $branch
+}

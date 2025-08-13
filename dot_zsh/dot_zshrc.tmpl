@@ -38,7 +38,7 @@ if grep -qs "/home/sohan/data" /proc/mounts; then
     "${fpath[@]}"
 )
 else
-    set_prompt_message "Warning: $STENA_PROJECTS_ROOT is not mounted"
+    set-prompt-message "Warning: $STENA_PROJECTS_ROOT is not mounted"
 fi
 
 # ensure_ssh
@@ -78,4 +78,4 @@ fi
 
 zsh_end_time=$(date +%s.%N)
 zsh_init_duration=$(((zsh_end_time - zsh_start_time) * 1000))
-set_prompt_message "Shell init time: ${zsh_init_duration%.*} ms"
+set-prompt-message "Shell init time: ${zsh_init_duration%.*} ms"

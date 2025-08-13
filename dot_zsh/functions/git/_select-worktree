@@ -1,0 +1,19 @@
+# Git function: Select worktree helper
+# Dependencies: awk, column, fzf
+# Purpose: Interactive selection of git worktrees using fzf
+# Usage: _select-worktree <worktrees_list>
+
+_select-worktree() {
+    local worktrees=${1}
+
+        {
+        echo "$worktrees" | awk '{
+            path=$1;
+            commit=$2;
+            branch="";
+            for (i=3; i<=NF; ++i) branch=branch $i " ";
+            gsub(/^\[|\]$/, "", branch);  # Remove [ and ] from branch name
+            print path "\t" commit "\t" branch
+        }'
+    } | column -t | fzf --ansi
+}

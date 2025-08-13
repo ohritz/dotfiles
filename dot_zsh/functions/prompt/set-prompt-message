@@ -1,0 +1,28 @@
+# Prompt function: Set prompt message
+# Dependencies: None
+# Purpose: Add messages to the prompt message queue
+# Global State: Uses OHR_PROMPT_MESSAGE array
+# Usage: set-prompt-message <message> [level]
+
+set-prompt-message() {
+  local message="$1"
+  local level="${2:-warn}"  # default to 'warn' if not provided
+
+  declare -g -a OHR_PROMPT_MESSAGE
+
+  if [[ -z "$message" ]]; then
+    echo "Error: No message provided." >&2
+    return 1
+  fi
+
+  case "$level" in
+    info|warn|error)
+      ;;
+    *)
+      echo "Error: Invalid level '$level'. Use 'info', 'warn', or 'error'." >&2
+      return 1
+      ;;
+  esac
+
+  OHR_PROMPT_MESSAGE+=("${level}:${message}")
+}

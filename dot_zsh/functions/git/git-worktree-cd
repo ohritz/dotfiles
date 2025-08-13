@@ -1,0 +1,44 @@
+# Git function: Change to git worktree
+# Dependencies: git, fzf
+# Purpose: Change directory to a git worktree with interactive selection
+# Usage: _git-worktree-cd
+
+git-worktree-cd() {
+    [ ! git_is_git_repo ] && return 0
+    local current_dir=$(pwd)
+    local -a worktree_array
+    worktree_array=(${(f)"$(git worktree list)"})
+
+    ## if there is only one in the list there are no worktree copies so exit
+    if [[ ${#worktree_array[@]} -eq 1 ]]; then
+        echo "No worktree copies found"
+        return 0
+    fi
+
+    ## if there are only two in the list and we are on the first one we go to the second if we are on the second we go to the first
+    if [[ ${#worktree_array[@]} -eq 2 ]]; then
+        local first_dir=$(echo "${worktree_array[0]}" | awk '{print $1}')
+        local second_dir=$(echo "${worktree_array[1]}" | awk '{print $1}')
+
+        if [[ "$current_dir" == "$first_dir" ]]; then
+            cd "$second_dir"
+            return 0
+        elif [[ "$current_dir" == "$second_dir" ]]; then
+            cd "$first_dir"
+            return 0
+        fi
+    fi
+
+    ## remove the entry that matches the current directory from the worktree list, but do not always remove the first item
+    local worktrees=$(printf '%s\n' "${worktree_array[@]}" | awk -v cur="$current_dir" '$1 != cur')
+
+    local worktree_dir=$(_select-worktree "$worktrees" | awk '{print $1}')
+
+    # if the selections is empty exit
+    if [[ -z "$worktree_dir" ]]; then
+        echo "No worktree selected"
+        return 0
+    fi
+
+    cd $worktree_dir
+}

@@ -1,0 +1,7 @@
+# Git function: List branches with gone remotes
+# Dependencies: git, awk
+# Purpose: Show branches whose remote tracking branches have been deleted
+
+git-remote-gone-ls() {
+    git fetch --all -p; git branch -vv | grep ": gone]" | awk '{ print $1 }'
+}

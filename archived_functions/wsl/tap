@@ -1,0 +1,8 @@
+# WSL function: Start tap interface
+# Dependencies: vpnkit-tap-vsockd
+# Purpose: Start the tap interface for vpnkit
+# Usage: tap
+
+tap() {
+    vpnkit-tap-vsockd --tap $TAP_NAME --path $SOCKET_PATH
+}

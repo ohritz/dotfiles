@@ -1,0 +1,8 @@
+# Utility function: Show help with bat
+# Dependencies: bat
+# Purpose: Display help text with syntax highlighting using bat
+# Usage: bathelp <command>
+
+bathelp() {
+  bat --plain --language=help "$@"
+}

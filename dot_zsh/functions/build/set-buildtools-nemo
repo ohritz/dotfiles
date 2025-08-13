@@ -1,0 +1,27 @@
+# Build tools function: Set Nemo build tools path
+# Dependencies: STENA_PROJECTS_ROOT environment variable, _add-to-path
+# Purpose: Set BUILD_TOOLS_PATH and add to PATH for Nemo build tools
+# Global State: Sets BUILD_TOOLS_PATH and modifies PATH
+# Usage: set-buildtools-nemo
+
+set-buildtools-nemo() {
+  if [[ -z "$STENA_PROJECTS_ROOT" ]]; then
+    echo "Error: STENA_PROJECTS_ROOT not set" >&2
+    return 1
+  fi
+
+  local build_tools_path="${STENA_PROJECTS_ROOT}/tm-build-tools"
+
+  if [[ ! -d "$build_tools_path" ]]; then
+    echo "Error: Build tools directory not found: $build_tools_path" >&2
+    return 1
+  fi
+
+  # Set the environment variable
+  export BUILD_TOOLS_PATH="$build_tools_path"
+
+  # Add to PATH using helper function
+  _add-to-path "$build_tools_path" "prepend"
+
+  echo "Build tools path set to: $build_tools_path"
+}

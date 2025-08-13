@@ -5,3 +5,5 @@ run_once_after_add-gpg.sh.tmpl
 .cursor
 setup.sh
 documents/*
+dot_zsh/functions/__tests__
+__tests__

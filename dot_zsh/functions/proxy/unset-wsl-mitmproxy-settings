@@ -1,0 +1,11 @@
+# Proxy function: Unset mitmproxy settings
+# Dependencies: None
+# Purpose: Clear proxy environment variables
+# Global State: Unsets HTTP_PROXY, HTTPS_PROXY, NODE_EXTRA_CA_CERTS
+# Usage: unset-wsl-mitmproxy-settings
+
+unset-wsl-mitmproxy-settings() {
+    unset HTTP_PROXY
+    unset HTTPS_PROXY
+    unset NODE_EXTRA_CA_CERTS
+}

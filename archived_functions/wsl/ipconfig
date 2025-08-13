@@ -1,0 +1,16 @@
+# WSL function: Configure IP routing
+# Dependencies: ip, iptables
+# Purpose: Configure IP routing for vpnkit
+# Usage: ipconfig
+
+ipconfig() {
+    ip a add $VPNKIT_WSL2_IP/255.255.255.0 dev $TAP_NAME
+    ip link set dev $TAP_NAME up
+    ip route del $(ip route | grep default)
+    ip route add default via $VPNKIT_GATEWAY_IP dev $TAP_NAME
+
+    if [ "$USE_IPTABLES" ]; then
+        iptables -t nat -A OUTPUT -d $WSL2_GATEWAY_IP -j DNAT --to-destination $VPNKIT_GATEWAY_IP
+        iptables -t nat -A POSTROUTING -o $TAP_NAME -j MASQUERADE
+    fi
+}

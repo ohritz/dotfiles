@@ -1,0 +1,17 @@
+# SSH function: Test SSH authentication
+# Dependencies: ssh
+# Purpose: Test if SSH agent can authenticate to GitHub
+# Usage: _check-ssh
+
+check-ssh() {
+  local result
+
+  result="$(ssh -T git@github.com 2>&1)"
+  if [[ $? == 1 ]] && [[ "$result" == *"successfully authenticated"* ]]; then
+    echo -e "[${Green}Success${Color_End}] - SSH Agent can authenticate to GitHub"
+    return 0
+  else
+    echo -e "[${Red}Failed${Color_End}] - SSH agent cannot authenticate to GitHub"
+    return 1
+  fi
+}

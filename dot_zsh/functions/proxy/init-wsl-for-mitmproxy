@@ -1,0 +1,17 @@
+# Proxy function: Initialize WSL for mitmproxy
+# Dependencies: ip, awk
+# Purpose: Set up proxy environment variables for mitmproxy in WSL
+# Global State: Sets HTTP_PROXY, HTTPS_PROXY, NODE_EXTRA_CA_CERTS
+# Usage: init-wsl-for-mitmproxy
+
+init-wsl-for-mitmproxy() {
+    local host_ip
+
+    host_ip=$(ip route show | grep -i default | awk '{ print $3}')
+    export HTTP_PROXY="http://${host_ip}:8080"
+    export HTTPS_PROXY="http://${host_ip}:8080"
+
+    export NODE_EXTRA_CA_CERTS=/usr/local/share/ca-certificates/mitmproxy-ca-cert.pem
+
+    echo 'run mitmproxy in a terminal on the windows side'
+}

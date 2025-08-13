@@ -1,0 +1,12 @@
+# WSL function: Wait for tap interface
+# Dependencies: None
+# Purpose: Wait for the tap interface to be available
+# Usage: tap-wait
+
+tap-wait() {
+    echo "waiting for $TAP_NAME ..."
+    while [ ! -e "/sys/class/net/$TAP_NAME" ]; do
+        sleep 0.1
+    done
+    echo "found $TAP_NAME"
+}

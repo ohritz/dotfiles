@@ -1,0 +1,8 @@
+# Utility function: Show command help with bat
+# Dependencies: bat
+# Purpose: Display command help output with syntax highlighting
+# Usage: help <command>
+
+help() {
+  "$@" --help 2>&1 | bathelp
+}

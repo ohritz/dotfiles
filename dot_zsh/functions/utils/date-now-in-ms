@@ -1,0 +1,8 @@
+# Utility function: Get current time in milliseconds
+# Dependencies: date, cut
+# Purpose: Return current timestamp in milliseconds
+# Usage: date-now-in-ms
+
+date-now-in-ms() {
+    echo $(date +%s%N | cut -b1-13)
+}

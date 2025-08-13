@@ -1,0 +1,24 @@
+# SSH function: Conditionally ensure SSH relay
+# Dependencies: git, _ensure-ssh
+# Purpose: Ensure SSH relay only when in git repos, with precmd hook
+# Global State: Uses SEEN_GIT_REPOS to track seen repos
+# Hook: Registers precmd hook for automatic execution
+
+# keep track of the last git root seen
+typeset -gA SEEN_GIT_REPOS
+
+_maybe-ensure-ssh() {
+  # Check if we're in a git repo
+  local git_root
+  git_root=$(git rev-parse --show-toplevel 2>/dev/null) || return
+
+  # Only run once per repo per session
+  if [[ -z ${SEEN_GIT_REPOS[$git_root]} ]]; then
+    SEEN_GIT_REPOS[$git_root]=1
+    _ensure-ssh
+  fi
+}
+
+# Register the hook using zsh's precmd
+autoload -Uz add-zsh-hook
+add-zsh-hook precmd _maybe-ensure-ssh

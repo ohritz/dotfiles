@@ -1,16 +1,122 @@
-# Load multi-function files via source (since they contain multiple functions)
-# These files contain multiple functions, so autoload isn't appropriate
+# Autoload Configuration for Individual Function Files
+# ===================================================
+# This file configures autoload for all 34 functions in the organized directory structure.
+# Functions are loaded in 4 phases to ensure proper dependencies and integration.
+#
+# For complete documentation, see: documents/functions/README.md
+# For testing, see: dot_zsh/functions/__tests__/quick-test.zsh
+#
+# Function Categories:
+# - Git: 7 functions (6 public, 1 private)
+# - SSH: 6 functions (3 public, 3 private)
+# - Prompt: 2 functions (all public)
+# - Docker: 2 functions (all public)
+# - Build: 6 functions (5 public, 1 private)
+# - Kubernetes: 1 function (public)
+# - AWS: 1 function (public)
+# - SSL: 2 functions (all public)
+# - Utils: 5 functions (all public)
+# - Spinner: 2 functions (1 public, 1 private)
+# - Chat: 1 function (public)
+# - Proxy: 2 functions (all public)
 
-source "${ZDOTDIR}/functions/ssl_tools.zsh"
-source "${ZDOTDIR}/functions/alias.zsh"
-source "${ZDOTDIR}/functions/ssh_tools.zsh"
-source "${ZDOTDIR}/functions/chatGPT.zsh"
-source "${ZDOTDIR}/functions/mitmproxy_helper.zsh"
-source "${ZDOTDIR}/functions/git.zsh"
-source "${ZDOTDIR}/functions/kubectl_helpers.zsh"
-source "${ZDOTDIR}/functions/prompt_messages.zsh"
-source "${ZDOTDIR}/functions/spinner.zsh"
-source "${ZDOTDIR}/functions/build_tools.zsh"
-source "${ZDOTDIR}/functions/stena_docker.zsh"
-source "${ZDOTDIR}/functions/utils.zsh"
-source "${ZDOTDIR}/functions/aws_tools.zsh"
+# Add all function directories to fpath for autoload discovery
+fpath=(
+    "${ZDOTDIR}/functions/git"
+    "${ZDOTDIR}/functions/ssh"
+    "${ZDOTDIR}/functions/prompt"
+    "${ZDOTDIR}/functions/docker"
+    "${ZDOTDIR}/functions/build"
+    "${ZDOTDIR}/functions/kubernetes"
+    "${ZDOTDIR}/functions/aws"
+    "${ZDOTDIR}/functions/ssl"
+    "${ZDOTDIR}/functions/utils"
+    "${ZDOTDIR}/functions/spinner"
+    "${ZDOTDIR}/functions/chat"
+    "${ZDOTDIR}/functions/proxy"
+    $fpath
+)
+
+# Phase 1: Environment Setup (Early Loading)
+# Functions that set global state or register hooks
+
+# SSH Functions (Global State and Hooks)
+autoload -Uz _ensure-ssh
+autoload -Uz _maybe-ensure-ssh  # Registers precmd hook automatically
+
+# Build Tools Functions (Environment Variables)
+autoload -Uz _add-to-path
+autoload -Uz set-buildtools-ca
+autoload -Uz set-buildtools-nemo
+autoload -Uz unset-buildtools
+
+# AWS Functions (Environment Variables)
+autoload -Uz set-aws-region
+
+# Proxy Functions (Environment Variables)
+autoload -Uz init-wsl-for-mitmproxy
+autoload -Uz unset-wsl-mitmproxy-settings
+
+# Phase 2: Core Utilities (Early-Mid Loading)
+# Functions that other functions depend on
+
+# Spinner Functions (Dependencies)
+autoload -Uz spinner
+autoload -Uz _spinner
+
+# Git Helper Functions
+autoload -Uz _select-worktree
+
+# Utility Functions
+autoload -Uz date-now-in-ms
+autoload -Uz date-from-unix-ms
+autoload -Uz conc
+autoload -Uz bathelp
+autoload -Uz help
+
+# Phase 3: Tool-Specific Functions (Mid Loading)
+# Main functionality functions
+
+# Git Functions
+autoload -Uz git-remote-gone-ls
+autoload -Uz git-remote-gone-rm
+autoload -Uz git-co-task
+autoload -Uz git-worktree-add
+autoload -Uz git-worktree-rm
+autoload -Uz git-worktree-cd
+
+# SSH Functions
+autoload -Uz kill-ssh-pipe
+autoload -Uz check-ssh
+
+# Docker Functions
+autoload -Uz reload-local-dev
+autoload -Uz prune-quay-images
+
+# Build Tools Functions
+autoload -Uz fetch-tm-secret
+autoload -Uz upload-tm-secret
+
+# Kubernetes Functions
+autoload -Uz kube-logout
+
+# SSL Functions (Depend on spinner)
+autoload -Uz check-for-sql-server-cert
+autoload -Uz check-for-server-cert
+
+# Chat Functions
+autoload -Uz chat-gpt
+
+# Phase 4: Prompt Integration (Late Loading)
+# Functions that integrate with the prompt system
+
+# Prompt Functions
+autoload -Uz set-prompt-message
+autoload -Uz prompt_my_message
+autoload -Uz prompt_my_ssh_relay_status
+
+# Note: The following functions are automatically loaded when needed:
+# - Public functions: Loaded when the command name is used
+# - Private functions: Loaded when called by other functions
+# - Hook functions: _maybe-ensure-ssh registers its precmd hook automatically
+# - Prompt functions: Loaded by the prompt system when needed

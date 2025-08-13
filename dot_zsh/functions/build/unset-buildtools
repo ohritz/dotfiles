@@ -1,0 +1,22 @@
+# Build tools function: Remove build tools from PATH
+# Dependencies: None
+# Purpose: Remove BUILD_TOOLS_PATH from PATH and unset the variable
+# Global State: Modifies PATH and unsets BUILD_TOOLS_PATH
+# Usage: unset-buildtools
+
+unset-buildtools() {
+  if [[ -n "$BUILD_TOOLS_PATH" ]]; then
+    local removed_path="$BUILD_TOOLS_PATH"
+
+    # Remove from PATH
+    PATH="${PATH//:$BUILD_TOOLS_PATH:/:}"
+    PATH="${PATH//:$BUILD_TOOLS_PATH/}"
+    PATH="${PATH//$BUILD_TOOLS_PATH:/}"
+    PATH="${PATH//$BUILD_TOOLS_PATH/}"
+
+    unset BUILD_TOOLS_PATH
+    echo "Build tools path removed: $removed_path"
+  else
+    echo "No build tools path currently set"
+  fi
+}

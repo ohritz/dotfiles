@@ -1,0 +1,8 @@
+# Docker function: Remove quay.io images
+# Dependencies: docker, xargs
+# Purpose: Remove Docker images from quay.io registry
+# Usage: prune-quay-images [force_flag]
+
+prune-quay-images() {
+    docker images --filter 'reference=quay.io/*/*' --format "{{.ID}}" | xargs docker rmi $1
+}

@@ -1,0 +1,8 @@
+# Docker function: Reload local dev aliases
+# Dependencies: TM_LOCAL_DEV_PATH environment variable
+# Purpose: Reload aliases from local dev environment
+# Usage: reload-local-dev
+
+reload-local-dev() {
+    source "${TM_LOCAL_DEV_PATH}/aliases"
+}

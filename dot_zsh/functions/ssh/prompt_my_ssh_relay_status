@@ -1,0 +1,32 @@
+# SSH function: Show SSH relay status in prompt
+# Dependencies: p10k
+# Purpose: Display SSH relay status as Powerlevel10k segment
+# Global State: Reads OHR_SSH_RELAY_STATUS
+# Usage: Called by prompt system
+# IMPORTANT: Must be named WITHOUT underscore prefix for Powerlevel10k recognition
+
+prompt_my_ssh_relay_status() {
+  declare -g OHR_SSH_RELAY_STATUS
+  local _fg _text
+
+  case $OHR_SSH_RELAY_STATUS in
+    OK | "")
+      return  # don't show segment
+      ;;
+    STARTING | RESTARTING)
+      _fg=yellow
+      ;;
+    FAILED)
+      _fg=red
+      ;;
+    UNKNOWN)
+      _fg=magenta
+      ;;
+    *)
+      _fg=blue
+      ;;
+  esac
+
+  _text="SSH Relay: $OHR_SSH_RELAY_STATUS"
+  p10k segment -c 0 -i $'\uf066' +r -t "$_text" -f $_fg
+}
