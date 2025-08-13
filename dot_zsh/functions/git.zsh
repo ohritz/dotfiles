@@ -1,5 +1,3 @@
-set -euo pipefail
-
 git-remote:gone:ls() {
     git fetch --all -p; git branch -vv | grep ": gone]" | awk '{ print $1 }'
 }
