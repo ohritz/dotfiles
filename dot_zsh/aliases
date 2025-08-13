@@ -17,4 +17,5 @@ alias d='docker'
 compdef d=docker
 alias dc='docker compose'
 
-
+alias zshconfig="code ~/.zsh"
+alias chezmoi-edit="code $HOME/.local/share/chezmoi"
