@@ -6,7 +6,8 @@ alias gsed='sed'
 compdef kubecolor=kubectl
 alias kubectl=kubecolor
 alias oc="kubecolor"
-export KUBECOLOR_KUBECTL="oc"
+alias k="kubecolor"
+#export KUBECOLOR_KUBECTL="oc"
 
 alias d='docker'
 compdef d=docker
