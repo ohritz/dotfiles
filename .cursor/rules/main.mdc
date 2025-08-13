@@ -1,0 +1,111 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Cursor Main Rules for chezmoi Dotfiles Repository
+
+These rules provide a high-level map of the repository so Cursor (and humans) know **where to look** or **place new files**.  For language-specific or technology-specific conventions see the dedicated rule files in this directory (e.g. `zsh.mdc`).
+
+## 1. Repository Top-Level Layout
+
+| Folder / File | Purpose |
+|---------------|---------|
+| `Brewfile` | Homebrew packages to install. |
+| `.chezmoiignore` | Patterns of files *not* managed by chezmoi. |
+| `dot_*` files / dirs | Regular dotfiles that map 1-to-1 to `$HOME/.*`. |
+| `private_dot_*` dirs | **Encrypted** dotfiles (managed via `chezmoi secret`). |
+| `run_once_*` scripts | Executed **one time** after first `chezmoi apply`. |
+| `run_onchange_*` scripts | Executed every time the referenced file changes. |
+| `archived_functions/` | Historical code – **never** loaded or applied. |
+| `.cursor/` | Cursor rule files (this folder). |
+| `documents/` | Misc docs & scratch notes – ignored by chezmoi. |
+
+## 2. Conventions for Naming
+
+1. **Prefix** every managed dotfile or directory with `dot_`.
+2. Append `.tmpl` for Go-template files that render different content per host.
+3. Machine-specific overrides live next to the generic file: e.g. `ohreo-wsl.gitconfig`.
+4. Executable scripts living inside dotfiles **must** be marked executable (`chmod +x`).
+
+---
+
+## 3. ⚡ Focus: `dot_zsh/` – Z S H Configuration Hub
+
+This is the most active area of the repo.  Files here are **autoloaded** in a predictable order by `dot_zshrc.tmpl` (see that file for the actual load logic).
+
+```text
+ dot_zsh/
+ ├── aliases              # One-liners: `alias gs="git status"` etc.
+ ├── exports              # `export` statements (non-secret).
+ ├── prompt_config        # Powerlevel10k & prompt toggles.
+ ├── plugins              # plugin list for zinit / antigen / etc.
+ ├── configs              # Misc small config snippets; sourced late.
+ ├── load_functions.zsh   # Autoload helper – do **not** edit load order here.
+ ├── dot_zshrc.tmpl       # Main entrypoint rendered by chezmoi → `~/.zshrc`.
+ │
+ ├── functions/           # Self-contained utility functions (autoload-compatible):
+ │   • Naming: verbs + nouns (`git_tools.zsh`, `aws_login.zsh`)
+ │   • Should **not** have side-effects on load – just define funcs.
+ │
+ ├── evals/               # "eval" wrappers (fzf, zoxide, brew env, etc.).
+ │   • Heavy startup cost pieces live here so they can be lazy-loaded.
+ │
+ ├── completions/         # Custom completion definitions ("_command" files).
+ │   • Must be zsh-completion compliant and start with `_` when appropriate.
+ │
+ ├── lscolors/            # `LS_COLORS` palette files.
+ │
+ ├── tools/               # Stand-alone helper scripts or wrappers.
+ │
+ ├── themes/              # Custom ZSH themes / p10k configs.
+ │   • `*.zsh-theme` or `*.zsh`.
+ │   • Do **not** add logic here; keep themes pure presentation.
+ │
+ ├── dot_p10k.zsh         # Generated Powerlevel10k config – rarely hand-edited.
+ ├── dot_secret-exports.tmpl   # Secrets for zsh, rendered from pass/keeper.
+ └── dot_kubectx-mappings.tmpl # Cluster name shortcuts.
+```
+
+### Loading Order
+1. `dot_zshenv` is loaded by zsh **before** anything else.
+2. `dot_zshrc` (rendered from `.tmpl`) sources the following in order:
+   1. `exports`  → shell variables
+   2. `aliases`  → convenience commands
+   3. `functions/` via `load_functions.zsh`
+   4. `plugins`  → plugin manager initialisation
+   5. `evals/`   → heavy eval blocks (fzf, brew, etc.)
+   6. `prompt_config` & `dot_p10k.zsh`
+   7. `configs`  → misc tweaks
+
+Keep new additions consistent with this order to avoid surprises.
+
+### Best Practices for `dot_zsh/`
+* **Pure functions** inside `functions/`; do *not* mutate global state at load.
+* Group related functions into one file (≤ 150 loc). Larger groups → sub-dir.
+* Completion files go to `completions/` and must be named after the command.
+* Template secrets (tokens, keys) **must** live in `dot_secret-exports.tmpl`.
+* Use `setopt WARN_CREATE_GLOBAL` during development to catch accidental globals.
+
+---
+
+## 4. Other Key Directories
+
+| Directory | Notes |
+|-----------|-------|
+| `dot_ssh/` | SSH config & keys *without* private keys – private keys are managed by the password managers ssh agent. |
+| `dot_local/bin/` | Executables added to `$PATH`; keep scripts short or move to `functions/`. |
+| `private_dot_gnupg/` | Encrypted GPG settings; never commit plain-text keys. |
+| `dot_gitconfigs/` | Host-specific gitconfig includes. |
+
+---
+
+## 5. Workflow Cheatsheet
+
+1. Edit files **in this repo** (`~/.local/share/chezmoi`).
+2. Run `git status` → stage → commit (`chezmoi: <message>`).
+3. Preview `chezmoi diff` (optional) then `chezmoi apply`.
+
+---
+
+Follow these high-level rules to keep the dotfiles organised and reduce cognitive load when adding new customisations.
