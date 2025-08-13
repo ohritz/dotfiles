@@ -1,0 +1,142 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+# zsh-agent-rules.yml
+# Purpose: Rules for an AI assistant (Cursor IDE) that edits / reviews a terminal zsh config repo
+# Sources: Zsh User Guide + Zsh Manual (see citations below)
+
+meta:
+  name: "zsh-terminal-setup-agent"
+  version: "0.1"
+  author: "auto-generated (condensed from Zsh User Guide & Manual)"
+  description: >
+    Rules for an AI assistant that edits, reviews and suggests zsh configuration and startup files
+    for a terminal-setup repo. Focus: correctness, safety (startup files), portability and minimalism.
+
+scope:
+  repo_types: ["dotfiles", "terminal-setup", "zsh-config"]
+  files: [".zshenv", ".zprofile", ".zshrc", ".zlogin", ".zlogout", "/etc/zshenv", "/etc/zshrc"]
+  activities:
+    - create_startup_files_snippets
+    - review_pr:startup
+    - lint_and_test_snippets
+    - recommend_options_and_plugins
+    - document_changes
+
+high_level_principles:
+  - "Minimal / Idempotent": Keep /etc/zshenv and .zshenv minimal; avoid interactive-only settings there. :contentReference[oaicite:0]{index=0}
+  - "Correct placement": Put environment exports that must apply to all shells in `.zshenv`; put interactive-only stuff (prompts, keybindings, completion init) in `.zshrc`. :contentReference[oaicite:1]{index=1}
+  - "Be explicit & safe": Use `setopt` / `unsetopt` explicitly; guard `/etc`-wide changes with `if [[ ! -o norcs ]]` where appropriate. :contentReference[oaicite:2]{index=2}
+  - "Prefer zsh-native constructs for scripts": Use `[[ ... ]]` tests, zsh parameter expansions, and `emulate zsh` for robust script execution. :contentReference[oaicite:3]{index=3}
+  - "Completion & editor are first-class": Initialize completion and zle properly and test `compaudit` / `compinit` as part of install checks. :contentReference[oaicite:4]{index=4}
+
+agent-behavior-rules:
+  # Priority order when editing or reviewing:
+  - id: "safety-startup"
+    priority: 1
+    when: "changes touch /etc/zshenv or ~/.zshenv"
+    do:
+      - "Reject PRs that add interactive prompts, heavy IO, or eval calls to /etc/zshenv."
+      - "Flag any unconditional option changes in /etc/zshenv; prefer guard `if [[ ! -o norcs ]]`."
+      - "Explain the problem and provide a minimal, guarded replacement snippet."
+
+  - id: "place-by-intent"
+    priority: 2
+    when: "new config or migrated dotfiles"
+    do:
+      - "Ensure exports that must be present for all shells go into `.zshenv`."
+      - "Ensure login-only setup goes into `.zprofile`/`.zlogin` (e.g. ssh-agent startup)."
+      - "Ensure interactive-only setup (PS1, keybindings, compinit, zle widget registration) goes into `.zshrc`."
+
+  - id: "completion-init"
+    priority: 3
+    when: "`.zshrc` modified or adding new completions/plugins"
+    do:
+      - "Recommend `autoload -Uz compinit && compinit` (and run `compaudit`); if insecure dirs are present, advise fixing ownership/mode or use `compinit -u` with explanation."
+      - "If adding third-party completions, ensure they are installed into a well-scoped $fpath and documented."
+
+  - id: "zle-keymaps"
+    priority: 4
+    when: "adding interactive keybindings or widgets"
+    do:
+      - "Wrap custom zle widget definitions in `if [[ -o interactive ]]` and `autoload -Uz zle` as needed."
+      - "Recommend using `zle -N` and `bindkey` in `.zshrc` and keep widget code small."
+
+  - id: "scripting-guides"
+    priority: 5
+    when: "editing scripts or functions in the repo"
+    do:
+      - "Prefer `[[` tests, use `local` for local vars, use arrays instead of space-joined strings when appropriate."
+      - "Add `emulate zsh` at top of functions intended to be portable or that assume default zsh behavior."
+
+  - id: "option-management"
+    priority: 6
+    when: "PR touches setopt/unsetopt"
+    do:
+      - "Require comments explaining why non-default options are changed."
+      - "If setopt/unsetopt are global, recommend placing them in `.zshrc` (interactive) or guarded in `.zshenv`."
+
+code-snippets:
+  minimal_zshenv: |
+    # ~/.zshenv  — minimal, run for every shell (non-interactive too)
+    # keep this file tiny: environment only
+    export PATH="${HOME}/.local/bin:${PATH}"
+    # Avoid interactive setups here: guard with norcs if you must
+    if [[ ! -o norcs ]]; then
+      # small, safe option example (rare)
+      true
+    fi
+
+  interactive_zshrc: |
+    # ~/.zshrc  — interactive shell setup only
+    if [[ -o interactive ]]; then
+      # safe option settings
+      setopt AUTO_CD NO_BEEP HIST_IGNORE_ALL_DUPS
+      # Completion: secure init
+      autoload -Uz compinit
+      # Run compaudit and warn if insecure (installer should fix)
+      compinit || {
+        echo "compinit failed — run 'compaudit' and fix permissions or use 'compinit -u' intentionally"
+      }
+      # zle related: enable vi-mode example
+      autoload -Uz zle
+      bindkey -v
+      # Prompt
+      PROMPT='%n@%m %1~ %# '
+    fi
+
+pr_checks:
+  - name: "zsh-syntax-lint"
+    run: "zsh -n <file>"
+    on_files: ["*.zsh", ".zshrc", ".zprofile", ".zshenv"]
+    fail_on: "any syntax error (makes suggestion to run locally: zsh -n file)"
+
+  - name: "startup-placement-check"
+    run: "custom script: verify env-only in .zshenv; interactive code in .zshrc"
+    fail_on: "interactive constructs (PS1, bindkey, compinit, PROMPT) in .zshenv"
+
+  - name: "compinit-security-check"
+    run: "compaudit || true"
+    action: "If compaudit warns, attach remediation steps to PR."
+
+documentation:
+  - "Every change that adds plugins or completions must include a short README entry: 'why', 'install location', 'security notes'."
+  - "Document $ZDOTDIR usage if repo supports custom dotdir."
+
+examples_and_tips:
+  - "Use `emulate -L zsh` at top of scripts that expect zsh defaults for temporary local behavior."
+  - "Prefer `[[ -o login ]]` and `[[ -o interactive ]]` tests in startup files to detect context. :contentReference[oaicite:5]{index=5}"
+  - "Use `compinit` and `zle` autoload patterns (autoload -Uz ...) — these are zsh builtins for completion and line editor. :contentReference[oaicite:6]{index=6}"
+
+out_of_scope:
+  - "Non-zsh shells (bash, fish)."
+  - "OS-level login manager configuration (beyond guidance which startup file to use)."
+
+references:
+  - "Zsh Manual (index and core manual info)." : ":contentReference[oaicite:7]{index=7}"
+  - "Startup files and placement guidance." : ":contentReference[oaicite:8]{index=8}"
+  - "ZLE (Zsh Line Editor) guidance and examples." : ":contentReference[oaicite:9]{index=9}"
+  - "Completion system (compinit, compaudit) - behavior & best practices." : ":contentReference[oaicite:10]{index=10}"
+  - "Substitutions / globbing / filename-generation guidance." : ":contentReference[oaicite:11]{index=11}"

@@ -1,0 +1,123 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+meta:
+  name: "zcomet-plugin-manager-agent"
+  version: "0.1"
+  description: >
+    Cursor AI agent rules for managing zcomet-based Zsh plugin configurations.
+    Focuses on proper usage of load, snippet, trigger, fpath, and compinit.
+
+scope:
+  repo_types: ["dotfiles", "terminal-setup", "zsh-config"]
+  files: [".zshrc", ".zshenv", "zsh_plugins.zsh", "zcomet-init.zsh"]
+  activities:
+    - review_pr:zcomet
+    - suggest_plugin_setup
+    - lint_and_test_zcomet_code
+    - document_changes
+
+high_level_principles:
+  - "Bootstrap zcomet only if not installed, using minimal guard code."
+  - "Use `zcomet load` for full plugin repos (clones, updates, paths, sources)."
+  - "Use `zcomet snippet` for one-off scripts; prefer raw URLs or OMZ shorthand."
+  - "Use `zcomet trigger` for lazy-loading plugins on first command use."
+  - "Use `zcomet fpath` for prompt/function-only repos, followed by promptinit."
+  - "Always run `zcomet compinit` at the end of plugin setup."
+  - "Document plugin purpose, source URL, and lazy-loading triggers."
+
+agent_behavior_rules:
+  - id: "bootstrap-zcomet"
+    priority: 1
+    when: "zcomet used but not bootstrapped"
+    do:
+      - "Insert guarded bootstrap snippet:"
+      - |
+        if [[ ! -f ${ZDOTDIR:-${HOME}}/.zcomet/bin/zcomet.zsh ]]; then
+          git clone https://github.com/agkozak/zcomet.git ${ZDOTDIR:-${HOME}}/.zcomet/bin
+        fi
+        source ${ZDOTDIR:-${HOME}}/.zcomet/bin/zcomet.zsh
+
+  - id: "plugin-load"
+    priority: 2
+    when: "full plugin repository to be loaded"
+    do:
+      - "Use syntax: zcomet load author/repo[@branch|@tag|@commit] [directory] [scripts...]"
+      - "Recommend --no-submodules if submodules are unnecessary."
+
+  - id: "plugin-snippet"
+    priority: 3
+    when: "only a single file or script is needed"
+    do:
+      - "Use syntax: zcomet snippet <url or OMZ::path>"
+      - "For GitHub blob URLs, convert to raw URLs automatically."
+
+  - id: "lazy-loading"
+    priority: 4
+    when: "plugin should only load on first invocation of command(s)"
+    do:
+      - "Use syntax: zcomet trigger cmd1 [cmd2 ...] author/plugin [args...]"
+
+  - id: "prompt-fpath"
+    priority: 5
+    when: "loading prompt-only or fpath functions"
+    do:
+      - "Use syntax: zcomet fpath author/repo [subdir]"
+      - "Follow with: autoload promptinit; promptinit; prompt <name>"
+
+  - id: "completion-init"
+    priority: 6
+    when: "finalizing plugin setup"
+    do:
+      - "Always run: zcomet compinit"
+      - "Ensure compinit runs after all plugin/snippet/fpath calls."
+
+code_snippets:
+  bootstrap: |
+    if [[ ! -f ${ZDOTDIR:-${HOME}}/.zcomet/bin/zcomet.zsh ]]; then
+      git clone https://github.com/agkozak/zcomet.git ${ZDOTDIR:-${HOME}}/.zcomet/bin
+    fi
+    source ${ZDOTDIR:-${HOME}}/.zcomet/bin/zcomet.zsh
+
+  plugin_load: |
+    zcomet load agkozak/zsh-z
+    zcomet load ohmyzsh plugins/gitfast --no-submodules
+
+  plugin_snippet: |
+    zcomet snippet https://github.com/jreese/zsh-titles/blob/master/titles.plugin.zsh
+    zcomet snippet OMZ::plugins/git/git.plugin.zsh
+
+  lazy_trigger: |
+    zcomet trigger extract x ohmyzsh plugins/extract
+
+  prompt_fpath: |
+    zcomet fpath agkozak/agkozak-zsh-prompt
+    autoload promptinit; promptinit
+    prompt agkozak-zsh-prompt
+
+  completion_init: |
+    zcomet compinit
+
+pr_checks:
+  - name: "zcomet-syntax-lint"
+    run: "zsh -n <file>"
+    on_files: ["*.zsh", ".zshrc"]
+    fail_on: "any syntax error"
+
+  - name: "zcomet-bootstrapped"
+    run: "grep -q 'source .*zcomet.zsh' <file>"
+    fail_on: "bootstrap sequence missing"
+
+  - name: "zcomet-compinit-check"
+    run: "grep -q 'zcomet compinit' <file>"
+    fail_on: "compinit missing after plugin setup"
+
+documentation:
+  - "Each plugin or snippet must have a comment with: description, repo URL, reason for inclusion."
+  - "Lazy-load triggers must list the commands that will activate them."
+
+references:
+  - "Zcomet documentation: https://zcomet.io/documentation/"
+  - "Zcomet GitHub: https://github.com/agkozak/zcomet"
