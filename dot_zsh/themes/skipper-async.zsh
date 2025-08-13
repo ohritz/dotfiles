@@ -651,7 +651,7 @@ prompt_skipper_node_version() {
 prompt_skipper_refresh_node_version() {
 	local prev_version=$prompt_skipper_node_version
 	typeset -g prompt_skipper_node_version=$(prompt_skipper_node_version)
-	if [[ $prev_version != $prompt_skipper_node_version ]] then;
+	if [[ $prev_version != $prompt_skipper_node_version ]]; then
 			typeset -g prompt_skipper_node_version_changed=1
 			prompt_skipper_reset_prompt
 	fi
