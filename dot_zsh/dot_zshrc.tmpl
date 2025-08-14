@@ -7,18 +7,19 @@ fi
 
 zsh_start_time=$(date +%s.%N)
 
-source "${ZDOTDIR}/configs"
-
-[ ! -d $ZCOMET_HOME ] && mkdir -p "$(dirname $ZCOMET_HOME)"
-[ ! -d "${ZCOMET_HOME}/bin/.git" ] && command git clone https://github.com/agkozak/zcomet.git "${ZCOMET_HOME}/bin"
-source "${ZCOMET_HOME}/bin/zcomet.zsh"
-
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zsh/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
+
+source "${ZDOTDIR}/configs"
+
+[ ! -d $ZCOMET_HOME ] && mkdir -p "$(dirname $ZCOMET_HOME)"
+[ ! -d "${ZCOMET_HOME}/bin/.git" ] && command git clone https://github.com/agkozak/zcomet.git "${ZCOMET_HOME}/bin"
+source "${ZCOMET_HOME}/bin/zcomet.zsh"
+
 
 zcomet snippet "${ZDOTDIR}/evals/homebrew.zsh"
 

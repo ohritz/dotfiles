@@ -29,8 +29,8 @@ export FZF_DEFAULT_OPTS='--color=fg:#f8f8f2,bg:#282a36,hl:#bd93f9 --color=fg+:#f
 # support nvmrc lazy versions
 export ASDF_NODEJS_LEGACY_FILE_DYNAMIC_STRATEGY=latest_available
 
-# large shell history
-export HISTFILE="$ZDOTDIR/.zsh_history"
+# large shell history - use XDG_STATE_HOME for persistent state
+export HISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/zsh/history"
 
 
 export PROJECT_PATHS=(~/data/projects/stena ~/data/projects ~/data/projects/lab)

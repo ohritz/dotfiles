@@ -5,5 +5,9 @@ run_once_after_add-gpg.sh.tmpl
 .cursor
 setup.sh
 documents/*
-dot_zsh/functions/__tests__
-__tests__
+**/__tests__/**
+
+# Legacy zsh files (migrated to XDG directories)
+dot_zsh/.zsh_history
+dot_zsh/.zcompdump*
+.zsh_cmdlog

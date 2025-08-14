@@ -1,6 +1,4 @@
 
-HIST_STAMPS="dd.mm.yyyy"
-
 # =============
 # fzf-tab config
 # =============
@@ -68,27 +66,6 @@ zstyle ':omz:plugins:eza' 'size-prefix' si
 # Default: no
 zstyle ':omz:plugins:eza' 'hyperlink' no
 
-# ---------------------
-# eza universal Dracula
-# ---------------------
-export EZA_COLORS="\
-uu=36:\
-uR=31:\
-un=35:\
-gu=37:\
-da=2;34:\
-ur=34:\
-uw=95:\
-ux=36:\
-ue=36:\
-gr=34:\
-gw=35:\
-gx=36:\
-tr=34:\
-tw=35:\
-tx=36:\
-xx=95:"
-
 # === Shell Behavior ===
 setopt auto_cd
 setopt auto_pushd
@@ -123,4 +100,5 @@ zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}' 'r:|[._-]=** r:|=**'
 # === ZComet settings ===
 ZCOMET_HOME="${HOME}/.local/share/zcomet"
 zstyle ':zcomet:*' home-dir $ZCOMET_HOME
-zstyle ':zcomet:compinit' dump-file "${ZDOTDIR}/.zcompdump"
+zstyle ':zcomet:compinit' dump-file "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/.zcompdump"
+zstyle ':zcomet:compinit' arguments -C

@@ -1,5 +1,6 @@
 autoload -Uz add-zsh-hook
-CMDLOGFILE=~/.zsh_cmdlog
+# Use XDG_STATE_HOME for logs (state data that persists across sessions)
+CMDLOGFILE="${XDG_STATE_HOME:-$HOME/.local/state}/zsh/command.log"
 # this is overly complicated so it only chmod's the file if it is creating
 # the file for the first time, while still verifying we can write to the file
 # via touch, and unsetting the variable if we can not write to it

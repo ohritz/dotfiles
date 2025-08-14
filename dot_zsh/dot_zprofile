@@ -29,3 +29,25 @@ export EDITOR="code"
 export SUDO_EDITOR="nano"
 export PAGER=less
 export LESS=-R
+
+# History format for all processes
+export HIST_STAMPS="dd.mm.yyyy"
+
+# eza universal Dracula colors (environment variable for all processes)
+export EZA_COLORS="\
+uu=36:\
+uR=31:\
+un=35:\
+gu=37:\
+da=2;34:\
+ur=34:\
+uw=95:\
+ux=36:\
+ue=36:\
+gr=34:\
+gw=35:\
+gx=36:\
+tr=34:\
+tw=35:\
+tx=36:\
+xx=95:"
