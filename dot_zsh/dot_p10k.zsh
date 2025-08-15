@@ -69,7 +69,6 @@
     # time                    # current time
     # =========================[ Line #2 ]=========================
     newline                   # \n
-    my_ssh_relay_status
     my_message
   )
 

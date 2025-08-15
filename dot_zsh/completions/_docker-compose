@@ -1,0 +1,242 @@
+#compdef docker-compose
+compdef _docker_compose docker-compose
+
+# zsh completion for docker-compose
+
+_docker_compose() {
+    local curcontext="$curcontext" state line
+    typeset -A opt_args
+
+    _arguments -C \
+        ':->command' \
+        '*::->args'
+
+    case $state in
+        command)
+            __docker_compose_commands
+            ;;
+        args)
+            case $line[1] in
+                up)
+                    __docker_compose_up
+                    ;;
+                down)
+                    __docker_compose_down
+                    ;;
+                build)
+                    __docker_compose_build
+                    ;;
+                logs)
+                    __docker_compose_logs
+                    ;;
+                ps)
+                    __docker_compose_ps
+                    ;;
+                exec)
+                    __docker_compose_exec
+                    ;;
+                run)
+                    __docker_compose_run
+                    ;;
+                stop)
+                    __docker_compose_stop
+                    ;;
+                start)
+                    __docker_compose_start
+                    ;;
+                restart)
+                    __docker_compose_restart
+                    ;;
+                rm)
+                    __docker_compose_rm
+                    ;;
+                pull)
+                    __docker_compose_pull
+                    ;;
+                push)
+                    __docker_compose_push
+                    ;;
+                config)
+                    __docker_compose_config
+                    ;;
+                *)
+                    _files
+                    ;;
+            esac
+            ;;
+    esac
+}
+
+__docker_compose_commands() {
+    local commands
+    commands=(
+        'build:Build or rebuild services'
+        'config:Validate and view the Compose file'
+        'down:Stop and remove containers, networks, images, and volumes'
+        'exec:Execute a command in a running container'
+        'help:Get help on a command'
+        'images:List images'
+        'kill:Kill containers'
+        'logs:View output from containers'
+        'pause:Pause services'
+        'port:Print the public port for a port binding'
+        'ps:List containers'
+        'pull:Pull service images'
+        'push:Push service images'
+        'restart:Restart services'
+        'rm:Remove stopped containers'
+        'run:Run a one-off command'
+        'scale:Set number of containers for a service'
+        'start:Start services'
+        'stop:Stop services'
+        'top:Display the running processes'
+        'unpause:Unpause services'
+        'up:Create and start containers'
+        'version:Show the Docker-Compose version information'
+    )
+    _describe -t commands 'docker-compose commands' commands
+}
+
+__docker_compose_services() {
+    local services
+    services=($(docker-compose config --services 2>/dev/null))
+    _describe -t services 'services' services
+}
+
+__docker_compose_up() {
+    _arguments \
+        '(-d --detach)'{-d,--detach}'[Detached mode: Run containers in the background]' \
+        '(--no-build)'--no-build'[Do not build an image, even if it is missing]' \
+        '(--no-deps)'--no-deps'[Do not start linked services]' \
+        '(--no-recreate)'--no-recreate'[If containers already exist, do not recreate them]' \
+        '(--no-color)'--no-color'[Produce monochrome output]' \
+        '(--force-recreate)'--force-recreate'[Recreate containers even if their configuration and image have not changed]' \
+        '(--always-recreate-deps)'--always-recreate-deps'[Recreate dependent containers]' \
+        '(--abort-on-container-exit)'--abort-on-container-exit'[Stops all containers if any container was stopped]' \
+        '(-t --timeout)'{-t,--timeout}'[Specify a shutdown timeout in seconds]' \
+        '(--remove-orphans)'--remove-orphans'[Remove containers for services not defined in the Compose file]' \
+        '(--scale)'--scale'[Scale SERVICE to NUM instances]' \
+        '*:services:__docker_compose_services'
+}
+
+__docker_compose_down() {
+    _arguments \
+        '(--rmi)'--rmi'[Remove images]' \
+        '(-v --volumes)'{-v,--volumes}'[Remove named volumes declared in the volumes section of the Compose file]' \
+        '(--remove-orphans)'--remove-orphans'[Remove containers for services not defined in the Compose file]' \
+        '(-t --timeout)'{-t,--timeout}'[Specify a shutdown timeout in seconds]'
+}
+
+__docker_compose_build() {
+    _arguments \
+        '(--no-cache)'--no-cache'[Do not use cache when building the image]' \
+        '(--pull)'--pull'[Always attempt to pull a newer version of the image]' \
+        '(--force-rm)'--force-rm'[Always remove intermediate containers]' \
+        '(--memory)'--memory'[Set memory limit for the build container]' \
+        '(--build-arg)'--build-arg'[Set build-time variables for services]' \
+        '*:services:__docker_compose_services'
+}
+
+__docker_compose_logs() {
+    _arguments \
+        '(-f --follow)'{-f,--follow}'[Follow log output]' \
+        '(--no-color)'--no-color'[Produce monochrome output]' \
+        '(-t --timestamps)'{-t,--timestamps}'[Show timestamps]' \
+        '(--tail)'--tail'[Number of lines to show from the end of the logs]' \
+        '*:services:__docker_compose_services'
+}
+
+__docker_compose_ps() {
+    _arguments \
+        '(-q --quiet)'{-q,--quiet}'[Only display IDs]' \
+        '(--services)'--services'[Display services]' \
+        '(--filter)'--filter'[Filter output based on conditions provided]' \
+        '*:services:__docker_compose_services'
+}
+
+__docker_compose_exec() {
+    _arguments \
+        '(-d --detach)'{-d,--detach}'[Detached mode: Run command in the background]' \
+        '(--privileged)'--privileged'[Give extended privileges to the process]' \
+        '(-u --user)'{-u,--user}'[Run the command as this user]' \
+        '(-T)'{-T}'[Disable pseudo-tty allocation]' \
+        '(--index)'--index'[Index of the container if there are multiple instances of a service]' \
+        '(-e --env)'{-e,--env}'[Set environment variables]' \
+        '(-w --workdir)'{-w,--workdir}'[Working directory inside the container]' \
+        '1:services:__docker_compose_services' \
+        '2:command:->command'
+}
+
+__docker_compose_run() {
+    _arguments \
+        '(-d --detach)'{-d,--detach}'[Detached mode: Run container in the background]' \
+        '(--name)'--name'[Assign a name to the container]' \
+        '(--entrypoint)'--entrypoint'[Override the entrypoint of the image]' \
+        '(-e --env)'{-e,--env}'[Set environment variables]' \
+        '(--rm)'--rm'[Automatically remove the container when it exits]' \
+        '(--service-ports)'--service-ports'[Run command with the service ports enabled]' \
+        '(-u --user)'{-u,--user}'[Run as specified username or uid]' \
+        '(--no-deps)'--no-deps'[Do not start linked services]' \
+        '(--rm)'--rm'[Remove container after run]' \
+        '(-T)'{-T}'[Disable pseudo-tty allocation]' \
+        '(-v --volume)'{-v,--volume}'[Bind mount a volume]' \
+        '(-w --workdir)'{-w,--workdir}'[Working directory inside the container]' \
+        '1:services:__docker_compose_services' \
+        '2:command:->command'
+}
+
+__docker_compose_stop() {
+    _arguments \
+        '(-t --timeout)'{-t,--timeout}'[Specify a shutdown timeout in seconds]' \
+        '*:services:__docker_compose_services'
+}
+
+__docker_compose_start() {
+    _arguments \
+        '*:services:__docker_compose_services'
+}
+
+__docker_compose_restart() {
+    _arguments \
+        '(-t --timeout)'{-t,--timeout}'[Specify a shutdown timeout in seconds]' \
+        '*:services:__docker_compose_services'
+}
+
+__docker_compose_rm() {
+    _arguments \
+        '(-f --force)'{-f,--force}'[Do not ask to confirm removal]' \
+        '(-s --stop)'{-s,--stop}'[Stop the containers, if required, before removing]' \
+        '(-v --volumes)'{-v,--volumes}'[Remove any anonymous volumes attached to containers]' \
+        '*:services:__docker_compose_services'
+}
+
+__docker_compose_pull() {
+    _arguments \
+        '(--ignore-pull-failures)'--ignore-pull-failures'[Pull what it can and ignores images with pull failures]' \
+        '(--parallel)'--parallel'[Pull multiple images in parallel]' \
+        '(--no-parallel)'--no-parallel'[Disable parallel pulling]' \
+        '(--quiet)'--quiet'[Pull without printing progress information]' \
+        '*:services:__docker_compose_services'
+}
+
+__docker_compose_push() {
+    _arguments \
+        '(--ignore-push-failures)'--ignore-push-failures'[Push what it can and ignores images with push failures]' \
+        '*:services:__docker_compose_services'
+}
+
+__docker_compose_config() {
+    _arguments \
+        '(--quiet)'--quiet'[Only validate the configuration, do not print anything]' \
+        '(--services)'--services'[Print the service names, one per line]' \
+        '(--volumes)'--volumes'[Print the volume names, one per line]' \
+        '(--hash)'--hash'[Print the service config hash, one per line]' \
+        '(--resolve-image-digests)'--resolve-image-digests'[Pin image tags to digests]' \
+        '(--no-interpolate)'--no-interpolate'[Do not interpolate environment variables]' \
+        '(-q --quiet)'{-q,--quiet}'[Only validate the configuration, do not print anything]'
+}
+
+# don't run the completion function when being source-ed or eval-ed
+if [ "$funcstack[1]" = "_docker_compose" ]; then
+    _docker_compose
+fi

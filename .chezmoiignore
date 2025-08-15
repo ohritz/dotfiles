@@ -6,8 +6,40 @@ run_once_after_add-gpg.sh.tmpl
 setup.sh
 documents/*
 **/__tests__/**
-
+.zsh/.kubectx-mappings
 # Legacy zsh files (migrated to XDG directories)
 dot_zsh/.zsh_history
 dot_zsh/.zcompdump*
 .zsh_cmdlog
+.zsh/lscolors/ReadMe.md
+
+{{- if .chezmoi.config.data.ismsys2 }}
+.config/git/ohreo-common.gitconfig
+.config/git/ohreo-wsl.gitconfig
+.config/git/stena-common.gitconfig
+.config/git/stena-wsl.gitconfig
+.config/git/wsl-common.gitconfig
+.ssh
+.gnupg
+.local/state/Brewfile
+.local/bin/op
+.tool-versions
+brew-list-load.sh
+install-packages.sh
+{{- end }}
+
+
+{{- if .chezmoi.config.data.iswsl -}}
+install_msys2_packages.sh
+{{- end -}}
+
+{{- if .chezmoi.config.data.islinux -}}
+install_msys2_packages.sh
+.local/bin/op
+{{- end -}}
+
+{{- if .chezmoi.config.data.iswindows -}}
+install_msys2_packages.sh
+.local/bin/op
+.tool-versions
+{{- end -}}

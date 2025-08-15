@@ -1,6 +1,11 @@
-
+{{- if .chezmoi.config.data.ismsys2 }}
+export STENA_PROJECTS_ROOT="/c/stena"
+{{- end }}
+{{- if or .chezmoi.config.data.iswsl .chezmoi.config.data.islinux}}
 export MY_DATA_DIR="${HOME}/data"
 export STENA_PROJECTS_ROOT="${MY_DATA_DIR}/projects/stena"
+{{- end }}
+
 export TM_LOCAL_DEV_PATH="${STENA_PROJECTS_ROOT}/tm-local-dev/"
 export TM_INFRASTRUCTURE_PATH="${STENA_PROJECTS_ROOT}/tm-infrastructure"
 export CA_INFRASTRUCTURE_PATH="${STENA_PROJECTS_ROOT}/freight-ca-infrastructure"
@@ -32,7 +37,12 @@ export ASDF_NODEJS_LEGACY_FILE_DYNAMIC_STRATEGY=latest_available
 # large shell history - use XDG_STATE_HOME for persistent state
 export HISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/zsh/history"
 
-
+{{- if .chezmoi.config.data.ismsys2 }}
+export PROJECT_PATHS=(/c/stena /c/dev /c/sloop)
+export TM_SPEED_UP_COMPLETION=true
+{{- end -}}
+{{- if .chezmoi.config.data.iswsl}}
 export PROJECT_PATHS=(~/data/projects/stena ~/data/projects ~/data/projects/lab)
 export TM_SPEED_UP_COMPLETION=true
+{{- end -}}
 export ZSH=TRUE

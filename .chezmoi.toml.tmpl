@@ -1,26 +1,37 @@
+{{- $choices := list "wsl2" "linux" "windows" "msys2" -}}
+{{- $env := promptChoice "Select your environment (wsl2, linux, windows, msys2)" $choices -}}
+
+{{- $iswsl := eq $env "wsl2" -}}
+{{- $islinux := eq $env "linux" -}}
+{{- $iswindows := eq $env "windows" -}}
+{{- $ismsys2 := eq $env "msys2" -}}
+
 [data]
-{{- $isLinux := eq .chezmoi.os "linux" -}}
-{{- $release := .chezmoi.kernel.osrelease | lower -}}
-{{- $isWSL   := and $isLinux (contains "microsoft" $release) -}}
-{{- $isRealLinux := and $isLinux (not (contains "microsoft" $release)) -}}
+    iswsl = {{ $iswsl }}
+    islinux = {{ $islinux }}
+    iswindows = {{ $iswindows }}
+    ismsys2 = {{ $ismsys2 }}
 
-{{- if $isWSL }}
-iswsl = true
+{{- if $iswsl }}
+    winhome = {{ index (index (keeper "Gg8xsVI4FyDzaUej-ZnOsQ").fields 0).value 0 | quote }}
 {{- else }}
-iswsl = false
-{{- end }}
-
-{{- if $isRealLinux }}
-islinux = true
-{{- else }}
-islinux = false
-{{- end }}
-
-{{- if $isWSL }}
-winhome = {{ index (index (keeper "Gg8xsVI4FyDzaUej-ZnOsQ").fields 0).value 0 | quote }}
-{{- else }}
-winhome = ""
+    winhome = ""
 {{- end }}
 
 [git]
-command = "/usr/bin/git"
+{{- if $ismsys2 }}
+    command = "/mingw64/bin/git"
+{{- else }}
+    command = "/usr/bin/git"
+{{- end }}
+
+
+{{ if $ismsys2 }}
+[keeper]
+    command = "C:/Program Files (x86)/Keeper Commander/keeper-commander.exe"
+[interpreters.sh]
+    command = "C:/msys64/usr/bin/zsh.exe"
+{{- else -}}
+[keeper]
+    command = "/home/sohan/.local/bin/keeper"
+{{- end -}}

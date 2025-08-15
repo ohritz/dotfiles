@@ -20,14 +20,28 @@ source "${ZDOTDIR}/configs"
 [ ! -d "${ZCOMET_HOME}/bin/.git" ] && command git clone https://github.com/agkozak/zcomet.git "${ZCOMET_HOME}/bin"
 source "${ZCOMET_HOME}/bin/zcomet.zsh"
 
-
+{{- if .chezmoi.config.data.ismsys2 }}
 zcomet snippet "${ZDOTDIR}/evals/homebrew.zsh"
+{{- end }}
 
 source "${ZDOTDIR}/exports"
 source "${ZDOTDIR}/.secret-exports"
 
 typeset -U fpath
 
+fpath=(
+    "${ZDOTDIR}/completions/"
+    "${fpath[@]}"
+)
+
+{{- if .chezmoi.config.data.ismsys2 }}
+export SKIP_HOST_CHECK=1
+source "${TM_LOCAL_DEV_PATH}/aliases"
+fpath=(
+    "${TM_LOCAL_DEV_PATH}completions"
+    "${fpath[@]}"
+)
+{{- end -}}
 
 {{- if .chezmoi.config.data.iswsl }}
 if grep -qs "/home/sohan/data" /proc/mounts; then
@@ -46,20 +60,17 @@ fi
 ulimit -Sn 4096
 {{- end }}
 
-fpath=(
-    "${ZDOTDIR}/functions/"
-    "${ZDOTDIR}/completions/"
-    "${fpath[@]}"
-)
 
 ## load zinit plugins
 source "${ZDOTDIR}/plugins"
 source "${ZDOTDIR}/aliases"
 
+{{- if .chezmoi.config.data.iswsl }}
 if command -v dotnet &> /dev/null; then
     # echo "dotnet is installed"
     . ~/.asdf/plugins/dotnet/set-dotnet-env.zsh
 fi
+{{- end }}
 
 zcomet load romkatv/powerlevel10k
 
@@ -74,7 +85,7 @@ zcomet compinit
 ################################################################################
 if [ $PROFILING_MODE -ne 0 ]; then
     # zprof | awk 'NR==1 || NR==2 || $5+0 > 0.01 {print}' | sort -rk5 | head -n 20 >~/zsh_profile.log
-    zprof >~/zsh_profile.log
+    zprof >~/zsh_profile_$(date +%Y%m%d_%H%M%S).log
 fi
 
 zsh_end_time=$(date +%s.%N)

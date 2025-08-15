@@ -14,6 +14,7 @@ export XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
 # Create XDG directories for zsh
 mkdir -p "${XDG_STATE_HOME}/zsh"
 mkdir -p "${XDG_CACHE_HOME}/zsh"
+mkdir -p "${HOME}/.local/share/zoxide"
 
 # Migrate history file if it exists in old location
 OLD_HISTFILE="${ZDOTDIR:-$HOME/.zsh}/.zsh_history"

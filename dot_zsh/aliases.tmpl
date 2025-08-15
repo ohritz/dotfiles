@@ -1,21 +1,25 @@
 alias ls='eza'
+alias dc='docker compose'
+alias gsed='sed'
+alias d='docker'
+
 # compdef ls=eza
 # compdef cd=zoxide
-alias dc='docker compose'
+compdef _docker d
+compdef _docker-compose dc
+
+alias zshconfig="code ~/.zsh"
+alias chezmoi-edit="code $HOME/.local/share/chezmoi"
 
 # Suffix aliases for quick file viewing/editing
 alias -s {log,txt,md,json,yaml,yml}=bat
 alias -s {py,js,ts,jsx,tsx,html,css,scss}=code
-alias gsed='sed'
+
+{{- if .chezmoi.config.data.iswsl }}
 compdef kubecolor=kubectl
 alias kubectl=kubecolor
 alias oc="kubecolor"
 alias k="kubecolor"
 #export KUBECOLOR_KUBECTL="oc"
+{{- end -}}
 
-alias d='docker'
-compdef d=docker
-alias dc='docker compose'
-
-alias zshconfig="code ~/.zsh"
-alias chezmoi-edit="code $HOME/.local/share/chezmoi"

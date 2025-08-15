@@ -18,7 +18,10 @@ source "${ZDOTDIR}/lscolors/lscolors.sh"
 zcomet load djui/alias-tips
 
 zcomet load ohmyzsh plugins/pj
+{{- if .chezmoi.config.data.iswsl }}
 zcomet load ohmyzsh plugins/sudo
+{{- end }}
+
 zcomet load ohmyzsh plugins/colorize
 zcomet load z-shell/zsh-navigation-tools
 
@@ -34,10 +37,12 @@ zcomet snippet "${ZDOTDIR}/evals/zoxide.zsh"
 zcomet fpath zsh-users/zsh-completions src
 zcomet fpath eza-community/eza
 
-zcomet load sudosubin/zsh-github-cli
-
 zcomet load Aloxaf/fzf-tab
 # It is good to load these popular plugins last, and in this order:
 zcomet load zdharma/fast-syntax-highlighting
 zcomet load zsh-users/zsh-autosuggestions
 zcomet load zsh-users/zsh-history-substring-search
+
+{{- if .chezmoi.config.data.ismsys2 }}
+unset ZSH_AUTOSUGGEST_USE_ASYNC
+{{- end -}}

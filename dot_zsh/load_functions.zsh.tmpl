@@ -23,7 +23,9 @@
 # Add all function directories to fpath for autoload discovery
 fpath=(
     "${ZDOTDIR}/functions/git"
+    {{- if .chezmoi.config.data.iswsl }}
     "${ZDOTDIR}/functions/ssh"
+    {{- end }}
     "${ZDOTDIR}/functions/prompt"
     "${ZDOTDIR}/functions/docker"
     "${ZDOTDIR}/functions/build"
@@ -40,9 +42,11 @@ fpath=(
 # Phase 1: Environment Setup (Early Loading)
 # Functions that set global state or register hooks
 
+{{- if .chezmoi.config.data.iswsl }}
 # SSH Functions (Global State and Hooks)
 autoload -Uz _ensure-ssh
 autoload -Uz _maybe-ensure-ssh  # Registers precmd hook automatically
+{{- end -}}
 
 # Build Tools Functions (Environment Variables)
 autoload -Uz _add-to-path
@@ -53,11 +57,12 @@ autoload -Uz unset-buildtools
 # AWS Functions (Environment Variables)
 autoload -Uz set-aws-region
 
+{{- if .chezmoi.config.data.iswsl }}
 # Proxy Functions (Environment Variables)
 autoload -Uz init-wsl-for-mitmproxy
 autoload -Uz unset-wsl-mitmproxy-settings
+{{- end }}
 
-# Phase 2: Core Utilities (Early-Mid Loading)
 # Functions that other functions depend on
 
 # Spinner Functions (Dependencies)

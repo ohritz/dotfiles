@@ -4,21 +4,27 @@
 [core]
 	editor = code --wait
 	autocrlf = input
+	fsmonitor = true
 	pager = delta
+{{- if .chezmoi.config.data.ismsys2 }}
+	trustctime = false
+	filemode = false
+	sshCommand = C:/WINDOWS/System32/OpenSSH/ssh.exe
+{{- end }}
 [interactive]
-    diffFilter = delta --color-only
+	diffFilter = delta --color-only
 [delta]
-    navigate = true  # use n and N to move between diff sections
-    # dark = true      # or light = true, or omit for auto-detection
+	navigate = true  # use n and N to move between diff sections
+	# dark = true      # or light = true, or omit for auto-detection
 	side-by-side = true
 	line-numbers = true
 	hyperlinks = true
-    hyperlinks-file-link-format = "vscode://file/{path}:{line}"
+	hyperlinks-file-link-format = "vscode://file/{path}:{line}"
 [diff]
-    tool = default-difftool
+	tool = default-difftool
 	colorMoved = zebra
 [difftool "default-difftool"]
-    cmd = code --wait --diff $LOCAL $REMOTE
+	cmd = code --wait --diff $LOCAL $REMOTE
 [push]
 	default = current
 [color]
@@ -57,6 +63,7 @@
 [rerere]
 	enabled = true
 [pager]
+    log = true
 	branch = false
 [pull]
 	rebase = true
@@ -77,22 +84,51 @@
 
 {{- if .chezmoi.config.data.iswsl }}
 [include]
-	path = "~/.gitconfigs/wsl-common.gitconfig"
+	path = "~/.config/git/wsl-common.gitconfig"
 [includeIf "hasconfig:remote.*.url:git@github.com:stena-line-ab/*.git"]
-	path = "~/.gitconfigs/stena-wsl.gitconfig"
+	path = "~/.config/git/stena-wsl.gitconfig"
 [includeIf "hasconfig:remote.*.url:https://github.com/ohritz/*.git"]
-	path = "~/.gitconfigs/ohreo-wsl.gitconfig"
+	path = "~/.config/git/ohreo-wsl.gitconfig"
 [includeIf "hasconfig:remote.*.url:git@github.com:ohritz/*.git"]
-	path = "~/.gitconfigs/ohreo-wsl.gitconfig"
-{{- end}}
+	path = "~/.config/git/ohreo-wsl.gitconfig"
+{{- end -}}
 
 {{- if .chezmoi.config.data.islinux }}
 [includeIf "hasconfig:remote.*.url:git@github.com:stena-line-ab/*.git"]
-	path = "~/.gitconfigs/stena-common.gitconfig"
+	path = "~/.config/git/stena-common.gitconfig"
 [includeIf "hasconfig:remote.*.url:https://github.com/ohritz/*.git"]
-	path = "~/.gitconfigs/ohreo-common.gitconfig"
+	path = "~/.config/git/ohreo-common.gitconfig"
 [includeIf "hasconfig:remote.*.url:git@github.com:ohritz/*.git"]
-	path = "~/.gitconfigs/ohreo-common.gitconfig"
+	path = "~/.config/git/ohreo-common.gitconfig"
 [gpg "ssh"]
     allowedSignersFile = "~/.ssh/allowed_signers"
-{{- end}}
+{{- end -}}
+
+{{- if .chezmoi.config.data.ismsys2 }}
+[credential]
+	modalPrompt = true
+	helper = manager-core
+
+[http]
+	sslbackend = openssl
+	postBuffer = 157286400
+[credential "https://dev.azure.com"]
+	usehttppath = true
+[difftool "vsdiffmerge"]
+	cmd = \"C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\Common7\\IDE\\CommonExtensions\\Microsoft\\TeamFoundation\\Team Explorer\\vsdiffmerge.exe\" \"$LOCAL\" \"$REMOTE\" //t
+	keepBackup = false
+[mergetool "vsdiffmerge"]
+	cmd = \"C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\Common7\\IDE\\CommonExtensions\\Microsoft\\TeamFoundation\\Team Explorer\\vsdiffmerge.exe\" \"$REMOTE\" \"$LOCAL\" \"$BASE\" \"$MERGED\" //m
+	keepBackup = false
+	trustExitCode = true
+[gpg "ssh"]
+	allowedSignersFile = C:/Users/sofe/.ssh/allowed_signers
+[includeIf "gitdir:~/.zsh/"]
+	path = C:/Users/sofe/ohritz.gitconfig
+[includeIf "hasconfig:remote.*.url:git@github.com:stena-line-ab/*.git"]
+	path = C:/Users/sofe/stena-win.gitconfig
+[includeIf "hasconfig:remote.*.url:stenait@vs-ssh.visualstudio.com:v3/stenait/SLOOP/sloop/*.git"]
+	path = C:/Users/sofe/stena-win.gitconfig
+[includeIf "hasconfig:remote.*.url:git@github.com:ohritz/*.git"]
+	path = C:/Users/sofe/ohritz.gitconfig
+{{- end -}}

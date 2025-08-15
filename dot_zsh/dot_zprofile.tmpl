@@ -14,6 +14,17 @@ typeset -U path
 path=(
     "$HOME/bin"
     "$HOME/.local/bin"
+    {{- if .chezmoi.config.data.ismsys2 }}
+    # Windows program paths
+    "/c/nvm4w/nodejs"
+    "/c/Program Files/Microsoft SDKs/Azure/CLI2/wbin"
+    "/c/Program Files/dotnet"
+    "/c/Program Files/GitHub CLI"
+    "/c/Program Files/Docker/Docker/resources/bin"
+    "/c/Users/sofe/AppData/Local/Programs/Microsoft VS Code/bin"
+    "/c/Users/sofe/AppData/Local/Programs/cursor/resources/app/bin"
+    {{ end -}}
+    {{- if or .chezmoi.config.data.iswsl .chezmoi.config.data.islinux}}
     "$HOME/.dotnet/tools"
     "${ASDF_DATA_DIR:-$HOME/.asdf}/shims"
     "$HOME/go/bin"
@@ -21,6 +32,7 @@ path=(
     "$HOME/.yarn/bin"
     "$HOME/.config/yarn/global/node_modules/.bin"
     "$BUN_INSTALL/bin"
+    {{ end -}}
     $path
 )
 

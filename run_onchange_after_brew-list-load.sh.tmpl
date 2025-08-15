@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Brewfile hash: {{ include "Brewfile" | sha256sum }}
+# Brewfile hash: {{ include ".local/state/Brewfile" | sha256sum }}
 brew update && brew upgrade
 brew bundle -v || (echo "Brewfile failed, exiting early" && exit 1)
 brew cleanup
