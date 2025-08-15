@@ -78,10 +78,6 @@
 	defaultBranch = master
 [gpg]
   format = ssh
-
-# [url "ssh://git@github.com/"]
-# 	insteadOf = https://github.com/
-
 {{- if .chezmoi.config.data.iswsl }}
 [include]
 	path = "~/.config/git/wsl-common.gitconfig"
@@ -123,7 +119,8 @@
 	trustExitCode = true
 [gpg "ssh"]
 	allowedSignersFile = C:/Users/sofe/.ssh/allowed_signers
-[includeIf "gitdir:~/.zsh/"]
+	program = "C:/Windows/System32/OpenSSH/ssh-keygen.exe"
+[includeIf "gitdir:~/.local/share/chezmoi/"]
 	path = C:/Users/sofe/ohritz.gitconfig
 [includeIf "hasconfig:remote.*.url:git@github.com:stena-line-ab/*.git"]
 	path = C:/Users/sofe/stena-win.gitconfig
