@@ -20,7 +20,7 @@ source "${ZDOTDIR}/configs"
 [ ! -d "${ZCOMET_HOME}/bin/.git" ] && command git clone https://github.com/agkozak/zcomet.git "${ZCOMET_HOME}/bin"
 source "${ZCOMET_HOME}/bin/zcomet.zsh"
 
-{{- if .chezmoi.config.data.iswsl }}
+{{- if or .chezmoi.config.data.iswsl .chezmoi.config.data.islinux }}
 zcomet snippet "${ZDOTDIR}/evals/homebrew.zsh"
 {{- end }}
 
@@ -36,11 +36,13 @@ fpath=(
 
 {{- if .chezmoi.config.data.ismsys2 }}
 export SKIP_HOST_CHECK=1
-source "${TM_LOCAL_DEV_PATH}/aliases"
-fpath=(
-    "${TM_LOCAL_DEV_PATH}completions"
-    "${fpath[@]}"
-)
+if [[ -d "${TM_LOCAL_DEV_PATH}" ]]; then
+    source "${TM_LOCAL_DEV_PATH}/aliases"
+    fpath=(
+        "${TM_LOCAL_DEV_PATH}completions"
+        "${fpath[@]}"
+    )
+fi
 {{- end -}}
 
 {{- if .chezmoi.config.data.iswsl }}
@@ -84,11 +86,11 @@ zcomet load romkatv/powerlevel10k
 source "${ZDOTDIR}/prompt_config"
 
 # Run compinit and compile its cache
-
+{{ if .chezmoi.config.data.iswsl }}
 compdef d=docker
 compdef kubecolor=kubectl
 compdef k=kubectl
-
+{{- end }}
 zcomet compinit
 
 ################################################################################
