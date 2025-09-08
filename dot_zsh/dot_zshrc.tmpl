@@ -49,7 +49,7 @@ if grep -qs "/home/sohan/data" /proc/mounts; then
     # set_buildtools_ca | set_buildtools_nemo
     # set_buildtools_nemo
     fpath=(
-    "${TM_LOCAL_DEV_PATH}completions"
+    "${TM_LOCAL_DEV_PATH}/completions"
     "${fpath[@]}"
 )
 else
@@ -60,6 +60,10 @@ fi
 ulimit -Sn 4096
 {{- end }}
 
+fpath=(
+    "${ZDOTDIR}/completions"
+    "${fpath[@]}"
+)
 
 ## load zinit plugins
 source "${ZDOTDIR}/plugins"
@@ -80,6 +84,11 @@ zcomet load romkatv/powerlevel10k
 source "${ZDOTDIR}/prompt_config"
 
 # Run compinit and compile its cache
+
+compdef d=docker
+compdef kubecolor=kubectl
+compdef k=kubectl
+
 zcomet compinit
 
 ################################################################################

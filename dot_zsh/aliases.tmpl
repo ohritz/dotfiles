@@ -18,8 +18,12 @@ alias -s {py,js,ts,jsx,tsx,html,css,scss}=code
 {{- if .chezmoi.config.data.iswsl }}
 compdef kubecolor=kubectl
 alias kubectl=kubecolor
-alias oc="kubecolor"
-alias k="kubecolor"
+#alias oc="kubecolor"
+alias k=kubecolor
 #export KUBECOLOR_KUBECTL="oc"
+alias d='docker'
+
+alias dc='docker compose'
 {{- end -}}
+
 
