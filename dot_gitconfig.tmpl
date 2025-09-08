@@ -6,10 +6,22 @@
 	autocrlf = input
 	fsmonitor = true
 	pager = delta
-{{- if .chezmoi.config.data.ismsys2 }}
+{{- if or .chezmoi.config.data.ismsys2 .chezmoi.config.data.iswindows }}
 	trustctime = false
 	filemode = false
 	sshCommand = C:/WINDOWS/System32/OpenSSH/ssh.exe
+{{- end }}
+{{- if or .chezmoi.config.data.iswindows }}
+	packedGitLimit = 512m
+    packedGitWindowSize = 512m
+	compression = 0
+[pack]
+    deltaCacheSize = 2047m
+    packSizeLimit = 2047m
+    windowMemory = 2047m
+[safe]
+	directory = C:/tools/fonts
+	directory = C:/stena/tm-sqlserver
 {{- end }}
 [interactive]
 	diffFilter = delta --color-only
@@ -38,6 +50,15 @@
 	keepbackups = false
 	prompt = true
 	trustexitcode = false
+{{- if or .chezmoi.config.data.iswindows }}
+[difftool "vsdiffmerge"]
+	cmd = "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/Common7/IDE/CommonExtensions/Microsoft/TeamFoundation/Team Explorer/vsdiffmerge.exe" "$LOCAL" "$REMOTE" //t
+	keepBackup = false
+[mergetool "vsdiffmerge"]
+	cmd = "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/Common7/IDE/CommonExtensions/Microsoft/TeamFoundation/Team Explorer/vsdiffmerge.exe" "$REMOTE" "$LOCAL" "$BASE" "$MERGED" //m
+	keepBackup = false
+	trustExitCode = true
+{{- end }}
 [grep]
     lineNumber = true
     patternType = perl
@@ -78,6 +99,8 @@
 	defaultBranch = master
 [gpg]
   format = ssh
+[fetch]
+  prune = true
 {{- if .chezmoi.config.data.iswsl }}
 [include]
 	path = "~/.config/git/wsl-common.gitconfig"
@@ -104,7 +127,6 @@
 [credential]
 	modalPrompt = true
 	helper = manager-core
-
 [http]
 	sslbackend = openssl
 	postBuffer = 157286400
@@ -131,3 +153,19 @@
 [help]
 	format = man
 {{- end }}
+{{- if .chezmoi.config.data.iswindows }}
+[credential]
+	modalPrompt = true
+	helper = manager-core
+[http]
+	sslbackend = openssl
+	postBuffer = 157286400
+[credential "https://dev.azure.com"]
+	usehttppath = true
+[includeIf "hasconfig:remote.*.url:git@github.com:stena-line-ab/*.git"]
+	path = C:/Users/{{ .chezmoi.config.data.winusername }}/.config/git/stena-common.gitconfig
+[includeIf "hasconfig:remote.*.url:git@github.com:ohritz/*.git"]
+	path = C:/Users/{{ .chezmoi.config.data.winusername }}/.config/git/ohreo-common.gitconfig
+[gpg "ssh"]
+  program = "C:/Windows/System32/OpenSSH/ssh-keygen.exe"
+{{- end -}}
