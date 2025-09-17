@@ -2,6 +2,7 @@
 {{- $env := promptChoice "Select your environment (wsl2, linux, windows, msys2)" $choices -}}
 {{- $stenaprojectsdirval := promptStringOnce . "stenaprojectsdir" "Where are the stena projects" "" -}}
 {{- $winhomedirval := promptStringOnce . "winhome" "Path to the windows home dir eg. /mnt/c/Users/sofe" "/mnt/c/Users/sofe" -}}
+{{- $winusernameval := promptStringOnce . "winusername" "Whats the the windows username" "" -}}
 
 {{- $iswsl := eq $env "wsl2" -}}
 {{- $islinux := eq $env "linux" -}}
@@ -14,7 +15,8 @@
     iswindows = {{ $iswindows }}
     ismsys2 = {{ $ismsys2 }}
     stenaprojectsdir = {{ $stenaprojectsdirval | quote }}
-    winhome = ""
+    winhome = {{ $winhomedirval | quote }}
+    winusername = {{ $winusernameval | quote }}
 
 [diff]
     pager = "delta"
