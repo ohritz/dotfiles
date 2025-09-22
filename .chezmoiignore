@@ -29,17 +29,17 @@ install-packages.sh
 {{- end }}
 
 
-{{- if .chezmoi.config.data.iswsl -}}
+{{- if .chezmoi.config.data.iswsl }}
 install_msys2_packages.sh
-{{- end -}}
+{{- end }}
 
-{{- if .chezmoi.config.data.islinux -}}
+{{- if .chezmoi.config.data.islinux }}
 install_msys2_packages.sh
 .local/bin/op
-{{- end -}}
+{{- end }}
 
-{{- if .chezmoi.config.data.iswindows -}}
+{{- if .chezmoi.config.data.iswindows }}
 install_msys2_packages.sh
 .local/bin/op
 .tool-versions
-{{- end -}}
+{{- end }}

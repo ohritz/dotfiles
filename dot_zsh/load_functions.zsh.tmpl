@@ -45,7 +45,9 @@ fpath=(
 {{- if .chezmoi.config.data.iswsl }}
 # SSH Functions (Global State and Hooks)
 autoload -Uz _ensure-ssh
-autoload -Uz _maybe-ensure-ssh  # Registers precmd hook automatically
+#autoload -Uz _maybe-ensure-ssh  # Registers precmd hook automatically
+source "${ZDOTDIR}/functions/ssh/_maybe-ensure-ssh"
+# Register the hook using zsh's precmd
 {{- end -}}
 
 # Build Tools Functions (Environment Variables)
@@ -65,8 +67,7 @@ autoload -Uz unset-wsl-mitmproxy-settings
 
 # Functions that other functions depend on
 
-# Spinner Functions (Dependencies)
-autoload -Uz spinner
+# Spinner
 autoload -Uz _spinner
 
 # Git Helper Functions
