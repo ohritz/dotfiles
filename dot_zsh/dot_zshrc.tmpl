@@ -20,7 +20,7 @@ source "${ZDOTDIR}/configs"
 [ ! -d "${ZCOMET_HOME}/bin/.git" ] && command git clone https://github.com/agkozak/zcomet.git "${ZCOMET_HOME}/bin"
 source "${ZCOMET_HOME}/bin/zcomet.zsh"
 
-{{- if .chezmoi.config.data.ismsys2 }}
+{{- if .chezmoi.config.data.iswsl }}
 zcomet snippet "${ZDOTDIR}/evals/homebrew.zsh"
 {{- end }}
 

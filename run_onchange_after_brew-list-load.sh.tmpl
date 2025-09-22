@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# Brewfile hash: {{ include ".local/state/Brewfile" | sha256sum }}
+# Brewfile hash: {{ include "dot_local/state/Brewfile" | sha256sum }}
 brew update && brew upgrade
-brew bundle -v || (echo "Brewfile failed, exiting early" && exit 1)
+brew bundle -v --file ~/.local/state/Brewfile || (echo "Brewfile failed, exiting early" && exit 1)
 brew cleanup
 if brew list | grep node; then
     brew uninstall --ignore-dependencies node
