@@ -1,5 +1,5 @@
 {{- if .chezmoi.config.data.ismsys2 }}
-export STENA_PROJECTS_ROOT="/c/stena"
+export STENA_PROJECTS_ROOT="{{ .chezmoi.config.data.stenaprojectsdir }}"
 {{- end }}
 {{- if or .chezmoi.config.data.iswsl .chezmoi.config.data.islinux}}
 export MY_DATA_DIR="${HOME}/data"

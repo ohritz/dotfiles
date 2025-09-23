@@ -6,9 +6,6 @@ export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
 export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
 export XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
 
-# Environment for tools that should be available to all descendants
-export DOTNET_ROOT=/usr/share/dotnet
-
 # PATH setup for login shells (unique entries)
 typeset -U path
 path=(
@@ -16,13 +13,13 @@ path=(
     "$HOME/.local/bin"
     {{- if .chezmoi.config.data.ismsys2 }}
     # Windows program paths
-    "/c/nvm4w/nodejs"
+    "/c/nvm4w/nodejs/"
     "/c/Program Files/Microsoft SDKs/Azure/CLI2/wbin"
     "/c/Program Files/dotnet"
     "/c/Program Files/GitHub CLI"
     "/c/Program Files/Docker/Docker/resources/bin"
-    "/c/Users/sofe/AppData/Local/Programs/Microsoft VS Code/bin"
-    "/c/Users/sofe/AppData/Local/Programs/cursor/resources/app/bin"
+    "/c/Users/{{ .chezmoi.config.data.winusername }}/AppData/Local/Programs/Microsoft VS Code/bin"
+    "/c/Users/{{ .chezmoi.config.data.winusername }}/AppData/Local/Programs/cursor/resources/app/bin"
     {{ end -}}
     {{- if or .chezmoi.config.data.iswsl .chezmoi.config.data.islinux}}
     "$HOME/.dotnet/tools"
@@ -31,7 +28,6 @@ path=(
     "/usr/local/go/bin"
     "$HOME/.yarn/bin"
     "$HOME/.config/yarn/global/node_modules/.bin"
-    "$BUN_INSTALL/bin"
     {{ end -}}
     $path
 )

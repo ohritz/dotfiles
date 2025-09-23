@@ -26,6 +26,7 @@ dot_zsh/.zcompdump*
 .tool-versions
 brew-list-load.sh
 install-packages.sh
+.zsh/evals/homebrew.zsh
 {{- end }}
 
 
@@ -42,4 +43,5 @@ install_msys2_packages.sh
 install_msys2_packages.sh
 .local/bin/op
 .tool-versions
-{{- end }}
+.zsh/evals/homebrew.zsh
+{{- end -}}

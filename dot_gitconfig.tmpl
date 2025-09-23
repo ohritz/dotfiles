@@ -118,14 +118,14 @@
 	keepBackup = false
 	trustExitCode = true
 [gpg "ssh"]
-	allowedSignersFile = C:/Users/sofe/.ssh/allowed_signers
+	allowedSignersFile = C:/Users/{{ .chezmoi.config.data.winusername }}/.ssh/allowed_signers
 	program = "C:/Windows/System32/OpenSSH/ssh-keygen.exe"
 [includeIf "gitdir:~/.local/share/chezmoi/"]
-	path = C:/Users/sofe/ohritz.gitconfig
+	path = C:/Users/{{ .chezmoi.config.data.winusername }}/.config/git/ohreo-common.gitconfig
 [includeIf "hasconfig:remote.*.url:git@github.com:stena-line-ab/*.git"]
-	path = C:/Users/sofe/stena-win.gitconfig
+	path = C:/Users/{{ .chezmoi.config.data.winusername }}/.config/git/stena-common.gitconfig
 [includeIf "hasconfig:remote.*.url:stenait@vs-ssh.visualstudio.com:v3/stenait/SLOOP/sloop/*.git"]
-	path = C:/Users/sofe/stena-win.gitconfig
+	path = C:/Users/{{ .chezmoi.config.data.winusername }}/.config/git/stena-common.gitconfig
 [includeIf "hasconfig:remote.*.url:git@github.com:ohritz/*.git"]
-	path = C:/Users/sofe/ohritz.gitconfig
-{{- end -}}
+	path = C:/Users/{{ .chezmoi.config.data.winusername }}/.config/git/ohreo-common.gitconfig
+{{- end }}

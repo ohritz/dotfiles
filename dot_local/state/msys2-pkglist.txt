@@ -18,4 +18,5 @@ mingw-w64-x86_64-uchardet
 msys2-runtime
 openssh
 unzip
+winpty
 zsh
