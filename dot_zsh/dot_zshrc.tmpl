@@ -62,11 +62,6 @@ fi
 ulimit -Sn 4096
 {{- end }}
 
-fpath=(
-    "${ZDOTDIR}/completions"
-    "${fpath[@]}"
-)
-
 ## load zinit plugins
 source "${ZDOTDIR}/plugins"
 source "${ZDOTDIR}/aliases"
@@ -86,7 +81,7 @@ zcomet load romkatv/powerlevel10k
 source "${ZDOTDIR}/prompt_config"
 
 # Run compinit and compile its cache
-{{ if .chezmoi.config.data.iswsl }}
+{{- if .chezmoi.config.data.iswsl }}
 compdef d=docker
 compdef kubecolor=kubectl
 compdef k=kubectl

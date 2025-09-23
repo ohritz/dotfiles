@@ -19,7 +19,8 @@
     winusername = {{ $winusernameval | quote }}
 
 [diff]
-    pager = "delta"
+    command = "code"
+    args = ["--wait", "--diff"]
     exclude = ["scripts"]
 
 [git]
@@ -27,7 +28,7 @@
     command = "/mingw64/bin/git"
 {{- else }}
     command = "/usr/bin/git"
-{{- end }}
+{{- end -}}
 
 
 {{ if $ismsys2 }}

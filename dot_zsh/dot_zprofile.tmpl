@@ -13,14 +13,13 @@ path=(
     "$HOME/.local/bin"
     {{- if .chezmoi.config.data.ismsys2 }}
     # Windows program paths
-    "/c/Users/sofe/AppData/Local/Microsoft/WinGet/Packages/jdx.mise_Microsoft.Winget.Source_8wekyb3d8bbwe/mise/bin"
-    "/c/Users/sofe/.local/share/mise/shims"
+    "/c/nvm4w/nodejs/"
     "/c/Program Files/Microsoft SDKs/Azure/CLI2/wbin"
     "/c/Program Files/dotnet"
     "/c/Program Files/GitHub CLI"
     "/c/Program Files/Docker/Docker/resources/bin"
-    "/c/Users/sofe/AppData/Local/Programs/Microsoft VS Code/bin"
-    "/c/Users/sofe/AppData/Local/Programs/cursor/resources/app/bin"
+    "/c/Users/{{ .chezmoi.config.data.winusername }}/AppData/Local/Programs/Microsoft VS Code/bin"
+    "/c/Users/{{ .chezmoi.config.data.winusername }}/AppData/Local/Programs/cursor/resources/app/bin"
     {{ end -}}
     {{- if or .chezmoi.config.data.iswsl .chezmoi.config.data.islinux}}
     "$HOME/.dotnet/tools"
@@ -32,15 +31,6 @@ path=(
     {{ end -}}
     $path
 )
-
-{{ if .chezmoi.config.data.ismsys2 }}
-export MISE_DATA_DIR=/c/Users/sofe/.local/share/mise
-export MISE_CACHE_DIR=/c/Users/sofe/.cache/mise
-export MISE_GLOBAL_CONFIG_FILE=/c/Users/sofe/.config/mise/config.toml
-export MISE_GLOBAL_CONFIG_ROOT=/c/Users/sofe
-export MISE_OS="windows"
-export MISE_WINDOWS_SHIM_MODE="hardlink"
-{{ end }}
 
 # Core editors/pagers for login shells
 export EDITOR="code"
