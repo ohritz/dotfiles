@@ -127,7 +127,6 @@ _docker()
     # - file completion will be performed (so there will be choices after the activeHelp)
     if [ $hasActiveHelp -eq 1 ]; then
         if [ ${#completions} -ne 0 ] || [ $((directive & shellCompDirectiveNoFileComp)) -eq 0 ]; then
-
             __docker_debug "Adding activeHelp delimiter"
             compadd -x "--"
             hasActiveHelp=0
