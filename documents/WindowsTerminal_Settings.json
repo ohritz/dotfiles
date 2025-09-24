@@ -1,0 +1,211 @@
+{
+    "$help": "https://aka.ms/terminal-documentation",
+    "$schema": "https://aka.ms/terminal-profiles-schema",
+    "actions": [],
+    "compatibility.allowHeadless": true,
+    "copyFormatting": "none",
+    "copyOnSelect": false,
+    "defaultProfile": "{e1e6f6eb-926b-59c1-83ca-2618c5c9d712}",
+    "keybindings": [
+        {
+            "id": "Terminal.CopyToClipboard",
+            "keys": "ctrl+c"
+        },
+        {
+            "id": "Terminal.FindText",
+            "keys": "ctrl+shift+f"
+        },
+        {
+            "id": "Terminal.PasteFromClipboard",
+            "keys": "ctrl+v"
+        },
+        {
+            "id": "Terminal.DuplicatePaneAuto",
+            "keys": "alt+shift+d"
+        }
+    ],
+    "newTabMenu": [
+        {
+            "type": "remainingProfiles"
+        }
+    ],
+    "profiles": {
+        "defaults": {
+            "adjustIndistinguishableColors": "indexed",
+            "font": {
+                "builtinGlyphs": false,
+                "face": "MesloLGS Nerd Font"
+            },
+            "opacity": 60,
+            "useAcrylic": true
+        },
+        "list": [
+            {
+                "colorScheme": "Solarized Dark",
+                "cursorShape": "vintage",
+                "guid": "{e1e6f6eb-926b-59c1-83ca-2618c5c9d712}",
+                "hidden": false,
+                "name": "Ubuntu",
+                "opacity": 90,
+                "source": "Microsoft.WSL",
+                "suppressApplicationTitle": false,
+                "useAcrylic": false
+            },
+            {
+                "answerbackMessage": "VT100+",
+                "antialiasingMode": "cleartype",
+                "colorScheme": "Dracula",
+                "commandline": "C:\\msys64\\msys2_shell.cmd -mingw64 -defterm -no-start -here -shell zsh",
+                "environment": {
+                    "HOME": "/home/sohfer",
+                    "MSYS": "winsymlinks:nativestrict"
+                },
+                "guid": "{3b0239b4-9f8b-4ba1-89e5-34b67ab25d44}",
+                "hidden": false,
+                "icon": "C:\\msys64\\mingw64.ico",
+                "name": "MingGW",
+                "pathTranslationStyle": "msys2",
+                "startingDirectory": "C:\\msys64\\home\\sohfer",
+                "suppressApplicationTitle": false
+            },
+            {
+                "answerbackMessage": "VT100+",
+                "antialiasingMode": "cleartype",
+                "colorScheme": "Dracula",
+                "commandline": "C:\\msys64\\usr\\bin\\zsh.exe -l",
+                "environment": {
+                    "CHERE_INVOKING": "enabled_from_arguments",
+                    "HOME": "/home/sohfer",
+                    "LOGINSHELL": "zsh",
+                    "MSYS": "winsymlinks:nativestrict",
+                    "MSYS2_NOSTART": "yes",
+                    "MSYS2_PATH_TYPE": "inherit",
+                    "MSYSTEM": "MINGW64"
+                },
+                "guid": "{21ba0c99-a114-46f5-a4ce-b7f55d15c8a6}",
+                "hidden": true,
+                "icon": "C:\\msys64\\mingw64.ico",
+                "name": "MingGW Zsh",
+                "pathTranslationStyle": "msys2",
+                "startingDirectory": "C:\\msys64\\home\\sohfer",
+                "suppressApplicationTitle": false
+            },
+            {
+                "colorScheme": "Cobalt2",
+                "elevate": false,
+                "guid": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
+                "hidden": false,
+                "name": "PowerShell",
+                "source": "Windows.Terminal.PowershellCore"
+            },
+            {
+                "colorScheme": "Cobalt2",
+                "commandline": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+                "elevate": true,
+                "guid": "{f625731a-f7ca-4f7e-a551-a374b3c5fab1}",
+                "hidden": false,
+                "icon": "ms-appx:///ProfileIcons/pwsh.png",
+                "name": "[Admin]PowerShell",
+                "startingDirectory": "%USERPROFILE%"
+            },
+            {
+                "commandline": "%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+                "guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
+                "hidden": true,
+                "name": "Windows PowerShell"
+            },
+            {
+                "commandline": "%SystemRoot%\\System32\\cmd.exe",
+                "guid": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
+                "hidden": true,
+                "name": "Command Prompt"
+            },
+            {
+                "guid": "{b453ae62-4e3d-5e58-b989-0a998ec441b8}",
+                "hidden": true,
+                "name": "Azure Cloud Shell",
+                "source": "Windows.Terminal.Azure"
+            },
+            {
+                "guid": "{16208362-94fc-5b1f-a491-5b2624d5ab56}",
+                "hidden": true,
+                "name": "Visual Studio Debug Console",
+                "source": "VSDebugConsole"
+            },
+            {
+                "guid": "{34b007f7-530c-571a-936f-e256a63e47cc}",
+                "hidden": true,
+                "name": "Developer Command Prompt for VS 2022",
+                "source": "Windows.Terminal.VisualStudio"
+            },
+            {
+                "guid": "{51d39afd-4174-5c28-ae25-7a8a188fb09a}",
+                "hidden": false,
+                "name": "Developer PowerShell for VS 2022",
+                "source": "Windows.Terminal.VisualStudio"
+            },
+            {
+                "guid": "{d4f62ce6-a83c-5092-a128-84cd41c14a58}",
+                "hidden": false,
+                "name": "Developer Command Prompt for VS 21",
+                "source": "Windows.Terminal.VisualStudio"
+            },
+            {
+                "guid": "{12f27319-4099-5ca4-92cf-8b2be81b3639}",
+                "hidden": false,
+                "name": "Developer PowerShell for VS 21",
+                "source": "Windows.Terminal.VisualStudio"
+            }
+        ]
+    },
+    "schemes": [
+        {
+            "background": "#132738",
+            "black": "#000000",
+            "blue": "#1460D2",
+            "brightBlack": "#555555",
+            "brightBlue": "#5555FF",
+            "brightCyan": "#6AE3FA",
+            "brightGreen": "#3BD01D",
+            "brightPurple": "#FF55FF",
+            "brightRed": "#F40E17",
+            "brightWhite": "#FFFFFF",
+            "brightYellow": "#EDC809",
+            "cursorColor": "#F0CC09",
+            "cyan": "#00BBBB",
+            "foreground": "#FFFFFF",
+            "green": "#38DE21",
+            "name": "Cobalt2",
+            "purple": "#FF005D",
+            "red": "#FF0000",
+            "selectionBackground": "#18354F",
+            "white": "#BBBBBB",
+            "yellow": "#FFE50A"
+        },
+        {
+            "background": "#282A36",
+            "black": "#21222C",
+            "blue": "#BD93F9",
+            "brightBlack": "#6272A4",
+            "brightBlue": "#D6ACFF",
+            "brightCyan": "#A4FFFF",
+            "brightGreen": "#69FF94",
+            "brightPurple": "#FF92DF",
+            "brightRed": "#FF6E6E",
+            "brightWhite": "#FFFFFF",
+            "brightYellow": "#FFFFA5",
+            "cursorColor": "#F8F8F2",
+            "cyan": "#8BE9FD",
+            "foreground": "#F8F8F2",
+            "green": "#50FA7B",
+            "name": "Dracula",
+            "purple": "#FF79C6",
+            "red": "#FF5555",
+            "selectionBackground": "#44475A",
+            "white": "#F8F8F2",
+            "yellow": "#F1FA8C"
+        }
+    ],
+    "themes": [],
+    "windowingBehavior": "useExisting"
+}
