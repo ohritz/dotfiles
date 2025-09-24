@@ -38,11 +38,11 @@ export ASDF_NODEJS_LEGACY_FILE_DYNAMIC_STRATEGY=latest_available
 export HISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/zsh/history"
 
 {{- if .chezmoi.config.data.ismsys2 }}
-export PROJECT_PATHS=(/c/stena /c/dev /c/sloop)
+export PROJECT_PATHS=(/c/stenadev)
 export TM_SPEED_UP_COMPLETION=true
-{{- end -}}
+{{- end }}
 {{- if .chezmoi.config.data.iswsl}}
 export PROJECT_PATHS=(~/data/projects/stena ~/data/projects ~/data/projects/lab)
 export TM_SPEED_UP_COMPLETION=true
-{{- end -}}
+{{- end }}
 export ZSH=TRUE

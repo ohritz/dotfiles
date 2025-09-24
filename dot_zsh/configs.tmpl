@@ -102,3 +102,7 @@ ZCOMET_HOME="${HOME}/.local/share/zcomet"
 zstyle ':zcomet:*' home-dir $ZCOMET_HOME
 zstyle ':zcomet:compinit' dump-file "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/.zcompdump"
 zstyle ':zcomet:compinit' arguments -C
+
+{{ if .chezmoi.config.data.ismsys2 }}
+export MSYS2_ENV_CONV_EXCL=MANPATH
+{{- end }}
