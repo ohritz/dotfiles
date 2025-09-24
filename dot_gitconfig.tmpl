@@ -164,6 +164,8 @@
 	usehttppath = true
 [includeIf "hasconfig:remote.*.url:git@github.com:stena-line-ab/*.git"]
 	path = C:/Users/{{ .chezmoi.config.data.winusername }}/.config/git/stena-common.gitconfig
+[includeIf "hasconfig:remote.*.url:stenait@vs-ssh.visualstudio.com:v3/stenait/SLOOP/sloop"]
+	path = C:/Users/{{ .chezmoi.config.data.winusername }}/.config/git/stena-common.gitconfig
 [includeIf "hasconfig:remote.*.url:git@github.com:ohritz/*.git"]
 	path = C:/Users/{{ .chezmoi.config.data.winusername }}/.config/git/ohreo-common.gitconfig
 [gpg "ssh"]
