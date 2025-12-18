@@ -3,6 +3,10 @@ function Invoke-Starship-TransientFunction {
     &starship module character
 }
 
+function Invoke-Starship-PreCommand {
+  $host.ui.RawUI.WindowTitle = "$pwd `a"
+}
+
 $env:XDG_CONFIG_HOME = if ($env:XDG_CONFIG_HOME) { $env:XDG_CONFIG_HOME } else { "$HOME/.config" }
 $env:XDG_CACHE_HOME = if ($env:XDG_CACHE_HOME) { $env:XDG_CACHE_HOME } else { "$HOME/.cache" }
 $env:XDG_DATA_HOME = if ($env:XDG_DATA_HOME) { $env:XDG_DATA_HOME } else { "$HOME/.local/share" }
@@ -10,11 +14,38 @@ $env:XDG_STATE_HOME = if ($env:XDG_STATE_HOME) { $env:XDG_STATE_HOME } else { "$
 
 Set-Alias -Name g -Value git
 
+$ENV:EDITOR = 'code'
+$env:PROJECT_PATHS = "C:\stenadev\;C:\stenadev\nemo\;C:\stenadev\freight-ca\;C:\stenadev\lab\"
+Import-Module PoshPj
+
+op completion powershell | Out-String | Invoke-Expression
+
+Import-Module PSReadLine
+Set-PSReadLineOption -PredictionSource History
+Set-PSReadLineOption -PredictionViewStyle InlineView
+Set-PSReadLineOption -HistorySearchCursorMovesToEnd
+Set-PSReadLineKeyHandler -Key UpArrow   -Function HistorySearchBackward
+Set-PSReadLineKeyHandler -Key DownArrow -Function HistorySearchForward
+
+Import-Module posh-git
+
+Import-Module PSFzf
+Set-PSReadLineKeyHandler -Key Tab -ScriptBlock { Invoke-FzfTabCompletion }
+Set-PsFzfOption -TabExpansion
+
 Import-Module StarshipInit
 
-Enable-TransientPrompt
+# Enable-TransientPrompt
+
+#f45873b3-b655-43a6-b217-97c00aa0db58 PowerToys CommandNotFound module
+
+Import-Module -Name Microsoft.WinGet.CommandNotFound
+#f45873b3-b655-43a6-b217-97c00aa0db58
+
+Import-Module Sohan.Utils
 
 Import-Module ZoxideInit
+##Invoke-Expression (& { (zoxide init powershell --cmd cd | Out-String) })
 
 # SIG # Begin signature block
 # MIIFfAYJKoZIhvcNAQcCoIIFbTCCBWkCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
@@ -48,3 +79,4 @@ Import-Module ZoxideInit
 # SC7D0hoPWcdoVT53KXzrGN3ykRtP0PwzP/anF151YgeGdYLbH/z1wozkX3T/GEme
 # nkqQcvnGTHLbHW3R92iNEg==
 # SIG # End signature block
+

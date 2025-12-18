@@ -78,10 +78,6 @@ function PrintModuleManifest {
     }
     $FullFilePath = Join-Path -Path $FilePath -ChildPath "Modules\$($EvalType)Init\$Version\$filename"
 
-    if (Test-Path -Path $FullFilePath) {
-        Update-ModuleManifest -Path $FullFilePath -RootModule "$($EvalType)Init.psm1" -Description "$($EvalType) shell prompt init" -ModuleVersion $Version | Out-Null
-    }
-
     New-ModuleManifest -Path $FullFilePath -RootModule "$($EvalType)Init.psm1" -Author "Sohan Fernando" -Description "$($EvalType) shell prompt init" -ModuleVersion $Version -CompanyName "Unknown" -Copyright "(c) 2025 Sohan Fernando. All rights reserved." -GUID ([guid]::NewGuid()) | Out-Null
 }
 
