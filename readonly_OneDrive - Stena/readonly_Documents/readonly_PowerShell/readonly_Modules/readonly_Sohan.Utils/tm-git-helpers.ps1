@@ -16,9 +16,8 @@ function New-GitPullRequest {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $false)]
-        [string]$TaskId
-    )
-    param(
+        [string]$TaskId,
+        [Parameter(Mandatory = $false)]
         [switch]$Draft
     )
 

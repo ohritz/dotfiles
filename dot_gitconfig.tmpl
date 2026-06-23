@@ -78,6 +78,7 @@
 	fap = fetch -a -p
 	# lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %Cblue<%an>%Creset' --abbrev-commit --date=relative --all
 	lg = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
+	lgm = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' origin/master
 	lgva = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all
 	lgv = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)'
 	lgh = !git --no-pager log --oneline --graph --decorate --all --color=always | head -n 15
@@ -98,9 +99,9 @@
 [init]
 	defaultBranch = master
 [gpg]
-  	format = ssh
+	format = ssh
 [fetch]
-  	prune = true
+	prune = true
 {{- if .chezmoi.config.data.iswsl }}
 [include]
 	path = "~/.config/git/wsl-common.gitconfig"
@@ -156,7 +157,7 @@
 {{- if .chezmoi.config.data.iswindows }}
 [credential]
 	modalPrompt = true
-	helper = manager-core
+	helper = manager
 [http]
 	sslbackend = openssl
 	postBuffer = 157286400
@@ -164,10 +165,13 @@
 	usehttppath = true
 [includeIf "hasconfig:remote.*.url:git@github.com:stena-line-ab/*.git"]
 	path = C:/Users/{{ .chezmoi.config.data.winusername }}/.config/git/stena-common.gitconfig
-[includeIf "hasconfig:remote.*.url:stenait@vs-ssh.visualstudio.com:v3/stenait/SLOOP/sloop"]
+[includeIf "hasconfig:remote.*.url:stenait@vs-ssh.visualstudio.com:v3/stenait/**"]
 	path = C:/Users/{{ .chezmoi.config.data.winusername }}/.config/git/stena-common.gitconfig
 [includeIf "hasconfig:remote.*.url:git@github.com:ohritz/*.git"]
 	path = C:/Users/{{ .chezmoi.config.data.winusername }}/.config/git/ohreo-common.gitconfig
 [gpg "ssh"]
-  	program = "C:/Windows/System32/OpenSSH/ssh-keygen.exe"
-{{- end -}}
+	program = "C:/Windows/System32/OpenSSH/ssh-keygen.exe"
+[i18n]
+	locale = C
+	logOutputEncoding = utf-8
+{{- end }}

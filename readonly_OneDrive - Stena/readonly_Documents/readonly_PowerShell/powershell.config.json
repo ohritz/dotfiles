@@ -1,1 +1,6 @@
-{"Microsoft.PowerShell:ExecutionPolicy":"Unrestricted","ExperimentalFeatures":["PSFeedbackProvider"]}
+{
+    "Microsoft.PowerShell:ExecutionPolicy": "RemoteSigned",
+    "ExperimentalFeatures": [
+        "PSFeedbackProvider"
+    ]
+}
