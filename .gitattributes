@@ -1,0 +1,22 @@
+# Normalize all text files to LF in the repo; check out with native line
+# endings (CRLF on Windows, LF on macOS/Linux).
+* text=auto
+
+# Files that MUST keep LF endings (shell scripts break with CRLF).
+*.sh text eol=lf
+*.bash text eol=lf
+*.zsh text eol=lf
+.zshenv text eol=lf
+
+# Binary files: never touch line endings.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.gpg binary
+*.gz binary
+*.zip binary
+*.exe binary
+*.dll binary

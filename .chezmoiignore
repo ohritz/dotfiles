@@ -19,29 +19,56 @@ dot_zsh/.zcompdump*
 .config/git/stena-common.gitconfig
 .config/git/stena-wsl.gitconfig
 .config/git/wsl-common.gitconfig
+.config/starship.toml
 .ssh
 .gnupg
 .local/state/Brewfile
+.local/state/winget-*
 .local/bin/op
 .tool-versions
 brew-list-load.sh
 install-packages.sh
 .zsh/evals/homebrew.zsh
+setup_directories.ps1
+**/*.ps1
+Scripts/*
 {{- end }}
 
 
 {{- if .chezmoi.config.data.iswsl }}
+.config/starship.toml
 install_msys2_packages.sh
+.local/state/msys2-pkglist.txt
+.local/state/winget-*
+setup_directories.ps1
+**/*.ps1
+Scripts/*
 {{- end }}
 
 {{- if .chezmoi.config.data.islinux }}
+.config/starship.toml
 install_msys2_packages.sh
 .local/bin/op
+.local/state/msys2-pkglist.txt
+.local/state/winget-*
+setup_directories.ps1
+**/*.ps1
+Scripts/*
 {{- end }}
 
 {{- if .chezmoi.config.data.iswindows }}
+setup_xdg_directories.sh
 install_msys2_packages.sh
+brew-list-load.sh
+add_completions.sh
+compile_zsh.sh
+install-packages.sh
+.local/state/Brewfile
+.local/state/msys2-pkglist.txt
 .local/bin/op
-.tool-versions
+.gnupg
+.zsh
+.zshenv
+.ssh/known_hosts
 .zsh/evals/homebrew.zsh
-{{- end -}}
+{{ end -}}

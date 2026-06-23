@@ -1,0 +1,13 @@
+$vhdPath = "C:\Users\{{ .chezmoi.config.data.winusername }}\Disks\ext4-wsl-data.vhdx"
+
+# Check if already attached
+if (-not (Get-DiskImage -ImagePath $vhdPath).Attached) {
+    Mount-DiskImage -ImagePath $vhdPath
+}
+
+# Get physical drive number
+$disk = Get-DiskImage -ImagePath $vhdPath | Get-Disk
+$phys = "\\.\PHYSICALDRIVE$($disk.Number)"
+
+# Pass into WSL
+wsl --mount $phys --bare
