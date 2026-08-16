@@ -28,15 +28,14 @@
     command = "/mingw64/bin/git"
 {{- else }}
     command = "/usr/bin/git"
-{{- end -}}
-
+{{- end }}
 
 {{ if $ismsys2 }}
 [keeper]
     command = "C:/Program Files (x86)/Keeper Commander/keeper-commander.exe"
 [interpreters.sh]
     command = "C:/msys64/usr/bin/zsh.exe"
-{{- else -}}
+{{- else }}
 [keeper]
     command = "/home/sohan/.local/bin/keeper"
-{{- end -}}
+{{- end }}
